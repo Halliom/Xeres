@@ -2,7 +2,6 @@
 //  PlantView.swift
 //  Xeres
 //
-//  Created by Johan Wieslander on 2017-04-26.
 //  Copyright © 2017 wiemor. All rights reserved.
 //
 
@@ -22,5 +21,16 @@ class PlantView: UIView {
     
     override func draw(_ rect: CGRect) {
         // Draw the plant!
+        var path = UIBezierPath()
+        var color = UIColor.green
+        
+        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
+        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+        path.close()
+        
+        color.setFill()
+        path.fill()
     }
 }
