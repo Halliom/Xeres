@@ -54,9 +54,12 @@ class Stem {
     
     let start: CGPoint
     
+    var connectionPoint: (CGPoint, CGPoint)
+    
     init(startingPoint: CGPoint) {
         path = UIBezierPath()
         start = startingPoint
+        connectionPoint = (CGPoint(x: 0, y: 0), CGPoint(x: 0, y: 0))
     }
     
     func flip(_ point: CGPoint, inRect: CGRect) -> CGPoint {
@@ -67,41 +70,53 @@ class Stem {
         return ((to - from) * CGFloat(arc4random()) / CGFloat(UINT32_MAX)) + from
     }
     
-    func drawSegment(from: StemPoint, to: StemPoint, rect: CGRect) {
-        let direction = CGPoint(x: to.position.x - from.position.x, y: to.position.y - from.position.y)
-        let normal = normalize(CGPoint(x: -direction.y, y: direction.x))
+    func drawSegment(to: StemPoint, rect: CGRect) {
+        let from = (connectionPoint.0 + connectionPoint.1) / 2.0
         
-        let control1 = CGPoint(x: from.position.x + (direction.x * rand(from: 0.1, to:0.2)),
-                               y: from.position.y + (direction.y * rand(from: 0.75, to:1.0)))
+        let direction = to.position - from
+        let normal = normalize(CGPoint(x: -direction.y, y: direction.x))
+    
+        let control1 = CGPoint(x: from.x + (direction.x * rand(from: 0.1, to:0.2)),
+                               y: from.y + (direction.y * rand(from: 0.75, to:1.0)))
         let control2 = to.position - (direction * 0.5)
         
-        let fromOffset = normal * from.size
         let toOffset = normal * to.size
         
         // Move to starting position from.position - from.size
-        path.move(to: flip(from.position + fromOffset, inRect: rect))
+        path.move(to: flip(connectionPoint.0, inRect: rect))
         
         // Add bezier curve to the end point (to.position - to.size)
-        path.addCurve(
-            to:             flip(to.position + toOffset, inRect: rect),
-            controlPoint1:  flip(control1 + toOffset, inRect: rect),
-            controlPoint2:  flip(control2 + toOffset, inRect: rect))
+        path.addCurve(to:             flip(to.position + toOffset, inRect: rect),
+                      controlPoint1:  flip(control1 + toOffset, inRect: rect),
+                      controlPoint2:  flip(control2 + toOffset, inRect: rect))
         
         // Move to the other side of the end point  (to.position + to.size)
         path.addLine(to: flip(to.position - toOffset, inRect: rect))
         
         // Draw back to the start (other side of the start) and reverse the order of
         // the control points since we are drawing the other from "to" to "from"
-        path.addCurve(
-            to:             flip(from.position - fromOffset, inRect: rect),
-            controlPoint1:  flip(control2 - fromOffset, inRect: rect),
-            controlPoint2:  flip(control1 - fromOffset, inRect: rect))
+        path.addCurve(to:             flip(connectionPoint.1, inRect: rect),
+                      controlPoint1:  flip(control2 - toOffset, inRect: rect),
+                      controlPoint2:  flip(control1 - toOffset, inRect: rect))
         
         // Move back to the start to close the path
         path.close()
         
         UIColor.green.setFill()
         path.stroke()
+        
+        // Update connectionPoint in preparation for the next call
+        connectionPoint = (to.position + toOffset, to.position - toOffset)
+    }
+    
+    func drawStartSegment(from: StemPoint, to: StemPoint, rect: CGRect) {
+        let direction = to.position - from.position
+        let normal = normalize(CGPoint(x: -direction.y, y: direction.x))
+        let fromOffset = normal * from.size
+        
+        self.connectionPoint = (from.position + fromOffset, from.position - fromOffset)
+        
+        drawSegment(to: to, rect: rect)
     }
     
     func draw(_ rect: CGRect) {
@@ -109,15 +124,14 @@ class Stem {
         let length1 = CGFloat(150)
         let point1 = CGPoint(x: start.x + length1 * cos(angle1), y: start.y + length1 * sin(angle1))
         
-        drawSegment(from: StemPoint(size: 20.0, position: start + 30),
-                    to: StemPoint(size: 10.0, position: point1),
-                    rect: rect)
+        drawStartSegment(from: StemPoint(size: 20.0, position: start + 30),
+                         to: StemPoint(size: 10.0, position: point1),
+                         rect: rect)
         
         let angle2 = CGFloat.pi / 4.0
         let length2 = CGFloat(100)
         let point2 = CGPoint(x: point1.x + length2 * cos(angle2), y: point1.y + length2 * sin(angle2))
-        //drawSegment(from: StemPoint(size: 10.0, position: point1),
-        //            to: StemPoint(size: 5.0, position: point2),
-        //            rect: rect)
+        drawSegment(to: StemPoint(size: 5.0, position: point2),
+                    rect: rect)
     }
 }
