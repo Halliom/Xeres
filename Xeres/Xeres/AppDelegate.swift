@@ -2,7 +2,6 @@
 //  AppDelegate.swift
 //  Xeres
 //
-//  Created by Johan Wieslander on 2017-04-26.
 //  Copyright © 2017 wiemor. All rights reserved.
 //
 
