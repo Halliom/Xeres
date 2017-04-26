@@ -3,7 +3,11 @@
 
 Follow the growth of your own personal plant, using gravity and care to shape its future.
 
-#### Comments:
+#### Remember
+- CG... for things related to drawing
+- Renderpipeline: Stem -> Leaf
+
+#### Comments
 
 - Skapa organiska former som animeras beroende av användarens rörelser och interaktion.
 
@@ -15,7 +19,7 @@ Follow the growth of your own personal plant, using gravity and care to shape it
 - Tänk även på stammens tjocklek – den borde öka ju större trädet blir.
 - Gravitation påverkar så att löven och grenarna böjer sig mot marken.
 
-##### Tekniker:
+##### Tekniker
     - Fysik!
 	- Kinematic chains
 	- UIBezierPath
