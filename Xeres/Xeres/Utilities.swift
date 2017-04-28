@@ -26,41 +26,43 @@ func rand(from: CGFloat, to: CGFloat) -> CGFloat {
 
 
 
+// Remove comments when duplicates have been removed
+
 // *******************************************************
 // ** CGPoint
 // **
 // *********  Operators *********
 
-func +(point: CGPoint, f: CGFloat) -> CGPoint {
-    return CGPoint(x: point.x + f, y: point.y + f)
-}
-
-func +(point1: CGPoint, point2: CGPoint) -> CGPoint {
-    return CGPoint(x: point1.x + point2.x, y: point1.y + point2.y)
-}
-
-func -(point: CGPoint, f: CGFloat) -> CGPoint {
-    return CGPoint(x: point.x - f, y: point.y - f)
-}
-
-func -(point1: CGPoint, point2: CGPoint) -> CGPoint {
-    return CGPoint(x: point1.x - point2.x, y: point1.y - point2.y)
-}
-
-func *(point: CGPoint, f: CGFloat) -> CGPoint {
-    return CGPoint(x: point.x * f, y: point.y * f)
-}
-
-func /(point: CGPoint, f: CGFloat) -> CGPoint {
-    return CGPoint(x: point.x / f, y: point.y / f)
-}
+//func +(point: CGPoint, f: CGFloat) -> CGPoint {
+//    return CGPoint(x: point.x + f, y: point.y + f)
+//}
+//
+//func +(point1: CGPoint, point2: CGPoint) -> CGPoint {
+//    return CGPoint(x: point1.x + point2.x, y: point1.y + point2.y)
+//}
+//
+//func -(point: CGPoint, f: CGFloat) -> CGPoint {
+//    return CGPoint(x: point.x - f, y: point.y - f)
+//}
+//
+//func -(point1: CGPoint, point2: CGPoint) -> CGPoint {
+//    return CGPoint(x: point1.x - point2.x, y: point1.y - point2.y)
+//}
+//
+//func *(point: CGPoint, f: CGFloat) -> CGPoint {
+//    return CGPoint(x: point.x * f, y: point.y * f)
+//}
+//
+//func /(point: CGPoint, f: CGFloat) -> CGPoint {
+//    return CGPoint(x: point.x / f, y: point.y / f)
+//}
 
 
 // ********* Functions *********
 
-func normalize(_ point: CGPoint) -> CGPoint {
-    return point / sqrt(pow(point.x, 2) + pow(point.y, 2))
-}
+//func normalize(_ point: CGPoint) -> CGPoint {
+//    return point / sqrt(pow(point.x, 2) + pow(point.y, 2))
+//}
 
 func rotateAroundOrigin(_ p: CGPoint, withAngle radians: CGFloat) -> CGPoint {
     let x = p.x*cos(radians) - p.y*sin(radians)
