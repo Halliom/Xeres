@@ -9,33 +9,6 @@
 import Foundation
 import UIKit
 
-
-func -(_ a: CGPoint, _ b: CGPoint) -> CGPoint {
-    return CGPoint(x: b.x - a.x, y: b.y - a.y)
-}
-
-func %(_ a: CGFloat, _ b: CGFloat) -> CGFloat {
-    return a.truncatingRemainder(dividingBy: b)
-}
-
-func +(_ a: CGPoint, _ b: CGPoint) -> CGPoint {
-    return CGPoint(x: a.x + b.x, y: a.y + b.y)
-}
-
-func rotateAroundOrigin(_ p: CGPoint, withAngle radians: CGFloat) -> CGPoint {
-    let x = p.x*cos(radians) - p.y*sin(radians)
-    let y = p.y*cos(radians) + p.x*sin(radians)
-    return CGPoint(x: x, y: y)
-    
-}
-
-func scale(_ p: CGPoint, from origin: CGPoint, by factor: CGFloat) -> CGPoint {
-    let diff = origin - p
-    return CGPoint(x: origin.x + diff.x*factor, y: origin.y + diff.y*factor)
-    
-}
-
-
 class Leaf {
     
     
