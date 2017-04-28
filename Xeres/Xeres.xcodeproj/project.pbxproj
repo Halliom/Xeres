@@ -14,6 +14,8 @@
 		836479571EB0929900E4AEC5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 836479551EB0929900E4AEC5 /* LaunchScreen.storyboard */; };
 		8364795F1EB0934700E4AEC5 /* PlantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8364795E1EB0934700E4AEC5 /* PlantView.swift */; };
 		836479611EB09A6800E4AEC5 /* Stem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836479601EB09A6800E4AEC5 /* Stem.swift */; };
+		88A2E9071EB387E500D04244 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A2E9061EB387E500D04244 /* Utilities.swift */; };
+		88E009011EB388E7002171D5 /* Leaf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E009001EB388E7002171D5 /* Leaf.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		836479581EB0929900E4AEC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8364795E1EB0934700E4AEC5 /* PlantView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantView.swift; sourceTree = "<group>"; };
 		836479601EB09A6800E4AEC5 /* Stem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stem.swift; sourceTree = "<group>"; };
+		88A2E9061EB387E500D04244 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		88E009001EB388E7002171D5 /* Leaf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Leaf.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,10 +65,12 @@
 				8364794C1EB0929900E4AEC5 /* AppDelegate.swift */,
 				8364794E1EB0929900E4AEC5 /* ViewController.swift */,
 				836479501EB0929900E4AEC5 /* Main.storyboard */,
+				88E009001EB388E7002171D5 /* Leaf.swift */,
 				836479531EB0929900E4AEC5 /* Assets.xcassets */,
 				836479551EB0929900E4AEC5 /* LaunchScreen.storyboard */,
 				836479581EB0929900E4AEC5 /* Info.plist */,
 				8364795E1EB0934700E4AEC5 /* PlantView.swift */,
+				88A2E9061EB387E500D04244 /* Utilities.swift */,
 				836479601EB09A6800E4AEC5 /* Stem.swift */,
 			);
 			path = Xeres;
@@ -145,6 +151,8 @@
 				8364794F1EB0929900E4AEC5 /* ViewController.swift in Sources */,
 				8364794D1EB0929900E4AEC5 /* AppDelegate.swift in Sources */,
 				836479611EB09A6800E4AEC5 /* Stem.swift in Sources */,
+				88E009011EB388E7002171D5 /* Leaf.swift in Sources */,
+				88A2E9071EB387E500D04244 /* Utilities.swift in Sources */,
 				8364795F1EB0934700E4AEC5 /* PlantView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
