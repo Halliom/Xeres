@@ -22,7 +22,17 @@ class Stem {
         oldLength = 0
     }
     
-    func draw(_ position: CGPoint, length: CGFloat) -> CGPoint {
+    //func generatePath(
+    
+    func getPointOnStem(fraction: CGFloat) -> CGPoint {
+        return CGPoint(x: 0, y: 0)
+    }
+    
+    func getTopPoint() -> CGPoint {
+        return CGPoint(x: 0, y: 0)
+    }
+    
+    func draw(_ position: CGPoint, length: CGFloat) {
         
     }
 }
