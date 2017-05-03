@@ -13,7 +13,7 @@ import UIKit
 
 fileprivate func randomDirection() -> CGFloat {
     
-    return rand(from: 5/4*CGFloat.pi, to: 7/4*CGFloat.pi)
+    return rand(from: 0, to: CGFloat.pi)
 }
 
 fileprivate func decision() -> CGFloat {

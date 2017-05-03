@@ -12,8 +12,9 @@
 		836479521EB0929900E4AEC5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 836479501EB0929900E4AEC5 /* Main.storyboard */; };
 		836479541EB0929900E4AEC5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 836479531EB0929900E4AEC5 /* Assets.xcassets */; };
 		836479571EB0929900E4AEC5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 836479551EB0929900E4AEC5 /* LaunchScreen.storyboard */; };
-		8364795F1EB0934700E4AEC5 /* PlantView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8364795E1EB0934700E4AEC5 /* PlantView.swift */; };
 		836479611EB09A6800E4AEC5 /* Stem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836479601EB09A6800E4AEC5 /* Stem.swift */; };
+		8384983D1EBA107600D07741 /* MainScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 8384983C1EBA107600D07741 /* MainScene.sks */; };
+		8384983F1EBA10D800D07741 /* PlantScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8384983E1EBA10D800D07741 /* PlantScene.swift */; };
 		881594151EB90A97001C8C7C /* Tree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881594141EB90A97001C8C7C /* Tree.swift */; };
 		88A2E9071EB387E500D04244 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88A2E9061EB387E500D04244 /* Utilities.swift */; };
 		88E009011EB388E7002171D5 /* Leaf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88E009001EB388E7002171D5 /* Leaf.swift */; };
@@ -27,8 +28,9 @@
 		836479531EB0929900E4AEC5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		836479561EB0929900E4AEC5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		836479581EB0929900E4AEC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8364795E1EB0934700E4AEC5 /* PlantView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantView.swift; sourceTree = "<group>"; };
 		836479601EB09A6800E4AEC5 /* Stem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stem.swift; sourceTree = "<group>"; };
+		8384983C1EBA107600D07741 /* MainScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainScene.sks; sourceTree = "<group>"; };
+		8384983E1EBA10D800D07741 /* PlantScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlantScene.swift; sourceTree = "<group>"; };
 		881594141EB90A97001C8C7C /* Tree.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Tree.swift; sourceTree = "<group>"; };
 		88A2E9061EB387E500D04244 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		88E009001EB388E7002171D5 /* Leaf.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Leaf.swift; sourceTree = "<group>"; };
@@ -72,9 +74,10 @@
 				836479551EB0929900E4AEC5 /* LaunchScreen.storyboard */,
 				836479581EB0929900E4AEC5 /* Info.plist */,
 				881594141EB90A97001C8C7C /* Tree.swift */,
-				8364795E1EB0934700E4AEC5 /* PlantView.swift */,
 				88A2E9061EB387E500D04244 /* Utilities.swift */,
 				836479601EB09A6800E4AEC5 /* Stem.swift */,
+				8384983C1EBA107600D07741 /* MainScene.sks */,
+				8384983E1EBA10D800D07741 /* PlantScene.swift */,
 			);
 			path = Xeres;
 			sourceTree = "<group>";
@@ -141,6 +144,7 @@
 				836479571EB0929900E4AEC5 /* LaunchScreen.storyboard in Resources */,
 				836479541EB0929900E4AEC5 /* Assets.xcassets in Resources */,
 				836479521EB0929900E4AEC5 /* Main.storyboard in Resources */,
+				8384983D1EBA107600D07741 /* MainScene.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,13 +155,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8384983F1EBA10D800D07741 /* PlantScene.swift in Sources */,
 				881594151EB90A97001C8C7C /* Tree.swift in Sources */,
 				8364794F1EB0929900E4AEC5 /* ViewController.swift in Sources */,
 				8364794D1EB0929900E4AEC5 /* AppDelegate.swift in Sources */,
 				836479611EB09A6800E4AEC5 /* Stem.swift in Sources */,
 				88E009011EB388E7002171D5 /* Leaf.swift in Sources */,
 				88A2E9071EB387E500D04244 /* Utilities.swift in Sources */,
-				8364795F1EB0934700E4AEC5 /* PlantView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

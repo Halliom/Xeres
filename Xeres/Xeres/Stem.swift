@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SpriteKit
 
 class Stem {
     
@@ -65,6 +66,8 @@ class Stem {
             updatePath()
         }
         
-        path.stroke()
+        var shapeNode = SKShapeNode(path: path.cgPath)
+        shapeNode.lineWidth = 3.0
+        PlantScene.scene.addChild(shapeNode)
     }
 }
