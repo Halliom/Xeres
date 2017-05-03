@@ -23,11 +23,21 @@ fileprivate func decision() -> CGFloat {
     return myRand(from: 0, to: 1)
 }
 
+fileprivate func calculateDirection() -> CGPoint {
+    
+    let direction = randomDirection()
+    let x = cos(direction)
+    let y = sin(direction)
+    
+    return CGPoint(x: x, y: y)
+}
+
 
 protocol Branchable {
     var length : CGFloat {
         get
     }
+
 }
 
 
@@ -46,9 +56,10 @@ class Tree : Branchable {
         }
     }
     
+    // Draw the tree, animating it as it goes
     func draw() {
         if let t = trunk {
-            t.draw()
+            t.draw(from: position!)
         } else {
             print("Call grow before draw")
         }
@@ -57,6 +68,7 @@ class Tree : Branchable {
     private var position : CGPoint?
     private var trunk : TreeBranch?
     
+    // Set len to maximum value so trunk always can grow
     private var len : CGFloat = CGFloat.greatestFiniteMagnitude
     var length : CGFloat {
         get {
@@ -71,18 +83,17 @@ class Tree : Branchable {
         init(from pos: CGPoint, withRoot root: Branchable) {
             self.root = root
             position  = pos
-            direction = randomDirection()
-            shape.move(to: position)
+            direction = calculateDirection()
+            
+            shape = Stem(dir: direction)
         }
         
         // The TreeBranch grows in length
-        private func grow() {
-            let X  : CGFloat = cos(direction)
-            let Y  : CGFloat = sin(direction)
+        private func grow(from position: CGPoint) {
             
-            position = CGPoint(x: position.x + X, y: position.y + Y)
+            len += 2
             
-            shape.addLine(to: position)
+            shape.draw(position, length: len)
         }
         
         // A new TreeBranch sprouts from this one
@@ -90,21 +101,48 @@ class Tree : Branchable {
             
         }
         
-        func draw() {
-            let growing = root.length/self.length * decision() > 0.4
-            print("grow: " + String(growing))
+        func draw(from position: CGPoint) {
+            
+            let growing = root.length/self.length * decision() > 0.9
+            
             if growing {
-                grow()
+                grow(from: position)
             }
             
-            shape.stroke()
+            for i in 0...branch.count {
+                let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
+                branch[i].draw(from: pos)
+            }
+            
+            let branching = length > 10 && decision() > 0.9
+            
+            if branching {
+                let branchPosition = calculateNewBranch()
+                
+                branchPositionAsFraction.append(branchPosition)
+                let pos = shape.getPointOnStem(fraction: branchPosition)
+                
+                let newBranch = TreeBranch(from: pos, withRoot: self)
+                branch.append(newBranch)
+                newBranch.draw(from: pos)
+                
+            }
+            
+            
+            
+        }
+        
+        private func calculateNewBranch() -> CGFloat {
+            return 1 - (1 / pow(2, CGFloat(branchPositionAsFraction.count)))
         }
     
         
         private let root : Branchable
-        private var branches : [TreeBranch] = []
+        private var branch : [TreeBranch] = []
+        private var branchPositionAsFraction : [CGFloat] = []
+        
         private var position : CGPoint
-        private let direction : CGFloat
+        private let direction : CGPoint
         
         private var len : CGFloat = 0
         var length : CGFloat {
@@ -113,7 +151,7 @@ class Tree : Branchable {
             }
         }
         
-        private var shape = UIBezierPath()
+        private var shape : Stem!
         
         
         
