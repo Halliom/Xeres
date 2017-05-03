@@ -8,8 +8,7 @@
 
 import Foundation
 import UIKit
-
-
+import SpriteKit
 
 fileprivate func randomDirection() -> CGFloat {
     
@@ -42,22 +41,26 @@ protocol Branchable {
 
 class Tree : Branchable {
     
-    static let sharedInstance = Tree()
+    //static var sharedInstance: Tree
     
-    init() { }
+    let scene: SKScene
+    
+    init(scene: SKScene) {
+        self.scene = scene
+    }
     
     // Start growing the tree
     func grow(from pos: CGPoint) {
         if position == nil {
             position = pos
-            trunk = TreeBranch(from: pos, withRoot: self)
+            trunk = TreeBranch(scene: scene, from: pos, withRoot: self)
         }
     }
     
     // Draw the tree, animating it as it goes
-    func draw() {
+    func update() {
         if let t = trunk {
-            t.draw(from: position!)
+            t.update(from: position!)
         } else {
             print("Call grow before draw")
         }
@@ -74,16 +77,18 @@ class Tree : Branchable {
         }
     }
 
-    
-    
     class TreeBranch : Branchable {
         
-        init(from pos: CGPoint, withRoot root: Branchable) {
+        let scene: SKScene
+        
+        init(scene: SKScene, from pos: CGPoint, withRoot root: Branchable) {
             self.root = root
             position  = pos
             direction = calculateDirection()
             
+            self.scene = scene
             shape = Stem(dir: direction)
+            scene.addChild(shape)
         }
         
         // The TreeBranch grows in length
@@ -97,7 +102,7 @@ class Tree : Branchable {
             
         }
         
-        func draw(from position: CGPoint) {
+        func update(from position: CGPoint) {
             
             self.position = position
             
@@ -108,11 +113,11 @@ class Tree : Branchable {
             }
             
             
-            shape.draw(position, length: len)
+            shape.update(position, length: len)
             
             for i in 0..<branch.count {
                 let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
-                branch[i].draw(from: pos)
+                branch[i].update(from: pos)
                 
                 UIColor.blue.setFill()
                 UIRectFill(CGRect(x: pos.x-5, y: pos.y-5, width: 10, height: 10))
@@ -131,21 +136,16 @@ class Tree : Branchable {
                 UIRectFill(CGRect(x: pos.x-5, y: pos.y-5, width: 10, height: 10))
                 UIColor.black.setFill()
                 
-                let newBranch = TreeBranch(from: pos, withRoot: self)
+                let newBranch = TreeBranch(scene: scene, from: pos, withRoot: self)
                 branch.append(newBranch)
-                newBranch.draw(from: pos)
-                
+                newBranch.update(from: pos)
             }
-            
-            
-            
         }
         
         private func calculateNewBranch() -> CGFloat {
             return 1 - (1 / pow(2, CGFloat(branchPositionAsFraction.count+1)))
         }
     
-        
         private let root : Branchable
         private var branch : [TreeBranch] = []
         private var branchPositionAsFraction : [CGFloat] = []
@@ -161,9 +161,6 @@ class Tree : Branchable {
         }
         
         private var shape : Stem!
-        
-        
-        
     }
 }
 

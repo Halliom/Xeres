@@ -2,9 +2,7 @@
 //  PlantScene.swift
 //  Xeres
 //
-//  Created by Johan Wieslander on 2017-05-03.
 //  Copyright © 2017 wiemor. All rights reserved.
-//
 
 import Foundation
 import SpriteKit
@@ -13,12 +11,13 @@ class PlantScene: SKScene {
     
     static var scene: PlantScene!
     
-    let tree = Tree()
+    var tree: Tree!
     
     override init(size: CGSize) {
         super.init(size: size)
         
         PlantScene.scene = self
+        tree = Tree(scene: self)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -30,6 +29,6 @@ class PlantScene: SKScene {
         
         tree.grow(from: CGPoint(x: frame.midX, y: frame.minY))
         
-        tree.draw()
+        tree.update()
     }
 }

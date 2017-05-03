@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 import SpriteKit
 
-class Stem {
+class Stem: SKNode {
     
     var path: UIBezierPath
     
@@ -30,6 +30,12 @@ class Stem {
         
         let rand = 0.15 * CGFloat(arc4random()) / CGFloat(Int32.max)
         bezierDirection = CGPoint(x: rand * dir.x, y: (1.0 - rand) * dir.y) * 0.7
+        
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     func updatePath() {
@@ -56,7 +62,7 @@ class Stem {
         return end
     }
     
-    func draw(_ position: CGPoint, length: CGFloat) {
+    func update(_ position: CGPoint, length: CGFloat) {
         if length != self.length || position != start {
             // Set new positions & length
             start = position
@@ -68,6 +74,6 @@ class Stem {
         
         var shapeNode = SKShapeNode(path: path.cgPath)
         shapeNode.lineWidth = 3.0
-        PlantScene.scene.addChild(shapeNode)
+        self.addChild(shapeNode)
     }
 }
