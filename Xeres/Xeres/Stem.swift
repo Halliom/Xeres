@@ -44,10 +44,11 @@ class Stem {
     func getPointOnStem(fraction: CGFloat) -> CGPoint {
         let controlPoint = start + (bezierDirection * length)
         
-        let lerp1 = (controlPoint - start) * (1.0 - fraction)
-        let lerp2 = (controlPoint - end) * fraction
+        let lerp1 = (1-fraction)*(1-fraction)*start
+        let lerp2 = 2*(1-fraction)*fraction*controlPoint
+        let lerp3 = fraction*fraction * end
         
-        return lerp1 + lerp2
+        return lerp1 + lerp2 + lerp3
     }
     
     func getTopPoint() -> CGPoint {

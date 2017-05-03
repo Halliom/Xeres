@@ -8,7 +8,23 @@
 import Foundation
 import UIKit
 
+fileprivate func paintOver(_ rect: CGRect) {
+    let filler = UIBezierPath()
+    
+    filler.move(to: CGPoint(x: rect.minX , y: rect.minY))
+    filler.addLine(to: CGPoint(x: rect.maxX , y: rect.minY))
+    filler.addLine(to: CGPoint(x: rect.maxX , y: rect.maxY))
+    filler.addLine(to: CGPoint(x: rect.minX , y: rect.maxY))
+    filler.close()
+    
+    let col = UIColor.white
+    col.setFill()
+    filler.fill()
+}
+
 class PlantView: UIView {
+    
+    let tree = Tree()
     
     override init (frame : CGRect) {
         super.init(frame : frame)
@@ -19,18 +35,30 @@ class PlantView: UIView {
         super.init(coder: aDecoder)
     }
     
+  
+    
     override func draw(_ rect: CGRect) {
-        // Draw the plant!
-        var path = UIBezierPath()
-        var color = UIColor.green
         
-        path.move(to: CGPoint(x: rect.minX, y: rect.minY))
-        path.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-        path.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
-        path.close()
+        tree.grow(from: CGPoint(x: rect.midX, y: rect.maxY))
         
-        color.setFill()
-        path.fill()
+        tree.draw()
+        paintOver(rect)
+        tree.draw()
+        paintOver(rect)
+        tree.draw()
+        paintOver(rect)
+        tree.draw()
+        paintOver(rect)
+        tree.draw()
+        paintOver(rect)
+        tree.draw()
+        paintOver(rect)
+        tree.draw()
+        paintOver(rect)
+        tree.draw()
+        paintOver(rect)
+        tree.draw()
+        
+     
     }
 }

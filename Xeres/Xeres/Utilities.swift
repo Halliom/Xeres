@@ -47,6 +47,10 @@ func *(point: CGPoint, f: CGFloat) -> CGPoint {
     return CGPoint(x: point.x * f, y: point.y * f)
 }
 
+func *(f: CGFloat, point: CGPoint) -> CGPoint {
+    return CGPoint(x: point.x * f, y: point.y * f)
+}
+
 func /(point: CGPoint, f: CGFloat) -> CGPoint {
     return CGPoint(x: point.x / f, y: point.y / f)
 }
