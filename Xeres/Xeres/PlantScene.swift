@@ -27,7 +27,6 @@ class PlantScene: SKScene {
     override func update(_ currentTime: TimeInterval) {
         
         tree.grow(from: CGPoint(x: frame.midX, y: frame.minY))
-        
         tree.update()
     }
 }
