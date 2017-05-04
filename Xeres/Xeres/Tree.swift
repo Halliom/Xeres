@@ -12,7 +12,7 @@ import SpriteKit
 
 fileprivate func randomDirection() -> CGFloat {
     
-    return rand(from: 0, to: CGFloat.pi)
+    return rand(from: 0*CGFloat.pi, to: CGFloat.pi)
 }
 
 fileprivate func decision() -> CGFloat {
@@ -37,7 +37,7 @@ protocol Branchable {
 
 }
 
-
+fileprivate let MAX_LENGTH : CGFloat = 200
 
 class Tree : Branchable {
     
@@ -93,8 +93,11 @@ class Tree : Branchable {
         
         // The TreeBranch grows in length
         private func grow() {
-            
-            len += 5
+            if len == 0 {
+                len = 1
+            } else {
+                len *= 1.01
+            }
         }
         
         // A new TreeBranch sprouts from this one
@@ -106,7 +109,7 @@ class Tree : Branchable {
             
             self.position = position
             
-            let growing = root.length/self.length > 1.1 //&& decision() > 0.15
+            let growing = length < MAX_LENGTH && root.length/self.length > 1.5 && decision() > 0.15
             
             if growing {
                 grow()
@@ -119,12 +122,9 @@ class Tree : Branchable {
                 let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
                 branch[i].update(from: pos)
                 
-                UIColor.blue.setFill()
-                UIRectFill(CGRect(x: pos.x-5, y: pos.y-5, width: 10, height: 10))
-                UIColor.black.setFill()
             }
             
-            let branching = length > 10 && decision() > 0.6
+            let branching = length > 10 && decision() < 2*length/MAX_LENGTH && branch.count < 5
             
             if branching {
                 let branchPosition = calculateNewBranch()
