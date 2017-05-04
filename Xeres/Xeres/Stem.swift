@@ -19,6 +19,7 @@ class Stem: SKNode {
     private var start: CGPoint
     private var end: CGPoint
     private var bezierDirection: CGPoint
+    private let shapeNode: SKShapeNode
     
     init(dir: CGPoint) {
         path = UIBezierPath()
@@ -31,7 +32,10 @@ class Stem: SKNode {
         let rand = 0.15 * CGFloat(arc4random()) / CGFloat(Int32.max)
         bezierDirection = CGPoint(x: rand * dir.x, y: (1.0 - rand) * dir.y) * 0.7
         
+        shapeNode = SKShapeNode(path: path.cgPath)
+        
         super.init()
+        super.addChild(shapeNode)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -71,9 +75,7 @@ class Stem: SKNode {
             
             updatePath()
         }
+        shapeNode.path = path.cgPath
         
-        var shapeNode = SKShapeNode(path: path.cgPath)
-        shapeNode.lineWidth = 3.0
-        self.addChild(shapeNode)
     }
 }

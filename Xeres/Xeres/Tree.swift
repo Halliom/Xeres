@@ -94,7 +94,7 @@ class Tree : Branchable {
         // The TreeBranch grows in length
         private func grow() {
             
-            len += 30
+            len += 5
         }
         
         // A new TreeBranch sprouts from this one

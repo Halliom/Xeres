@@ -25,7 +25,6 @@ class PlantScene: SKScene {
     }
     
     override func update(_ currentTime: TimeInterval) {
-        self.removeAllChildren()
         
         tree.grow(from: CGPoint(x: frame.midX, y: frame.minY))
         
