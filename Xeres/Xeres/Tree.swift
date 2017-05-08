@@ -29,20 +29,31 @@ fileprivate func calculateDirection() -> CGPoint {
     return CGPoint(x: x, y: y)
 }
 
+fileprivate func polarToCartesian(direction: CGFloat) -> CGPoint {
+    let x = cos(direction)
+    let y = sin(direction)
+    
+    return CGPoint(x: x, y: y)
+}
+
 
 protocol Branchable {
     var length : CGFloat {
         get
     }
-
+    var direction: CGFloat {
+        get
+    }
 }
 
 fileprivate let MAX_LENGTH : CGFloat = 200
 
 class Tree : Branchable {
+
     
     private var position : CGPoint?
     private var trunk : TreeBranch?
+    var direction = CGFloat.pi/2
     
     // Set len to maximum value so trunk always can grow
     private var len : CGFloat
@@ -84,7 +95,8 @@ class Tree : Branchable {
         private var branchPositionAsFraction : [CGFloat]
         
         private var position : CGPoint
-        private let direction : CGPoint
+        var direction : CGFloat
+        private var relativeDirection : CGFloat
         
         private var len : CGFloat
         var length : CGFloat {
@@ -103,11 +115,12 @@ class Tree : Branchable {
             branchPositionAsFraction = []
             
             position  = pos
-            direction = calculateDirection()
+            relativeDirection = rand(from: -CGFloat.pi/2, to: CGFloat.pi/2)
+            direction = root.direction + relativeDirection
             len = 0
             
             self.scene = scene
-            shape = Stem(dir: direction)
+            shape = Stem(dir: polarToCartesian(direction: direction))
             scene.addChild(shape)
         }
         
@@ -141,13 +154,13 @@ class Tree : Branchable {
             self.position = position
             
             let growing = length < MAX_LENGTH && root.length/self.length > 1.5 && decision() > 0.15
-            
             if growing {
                 grow()
             }
             
+            direction = root.direction + relativeDirection
             
-            shape.update(position, length: len)
+            shape.update(position, length: len, dir: polarToCartesian(direction: direction))
             
             for i in 0..<branch.count {
                 let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
@@ -156,7 +169,6 @@ class Tree : Branchable {
             }
             
             let branching = length > 10 && decision() < 2*length/MAX_LENGTH && branch.count < 5
-            
             if branching {
                 sprout()
             }
