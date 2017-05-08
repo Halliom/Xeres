@@ -177,6 +177,18 @@ class Tree : Branchable {
         private func calculateNewBranch() -> CGFloat {
             return 1 - (1 / pow(2, CGFloat(branchPositionAsFraction.count+1)))
         }
+        
+        func calculateForceOnRoot() -> CGFloat {
+            // Sum up the force of the leaf TreeBranches
+            
+            // Calculate the resistance/strength in the branch
+            
+            // Calculate the force on the root branch
+            
+            // Update the direction of the branch based on the forces on in
+            
+            return 0;
+        }
     
     }
 }
