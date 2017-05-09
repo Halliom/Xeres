@@ -48,6 +48,9 @@ protocol Branchable {
 
 fileprivate let MAX_LENGTH : CGFloat = 200
 
+fileprivate let MAX_BRANCHES = 100
+fileprivate var NUMBER_OF_BRANCHES = 0
+
 class Tree : Branchable {
 
     
@@ -83,6 +86,7 @@ class Tree : Branchable {
     func update() {
         if let t = trunk {
             t.update(from: position!)
+            //t.forceOnRoot()
         } else {
             print("Call grow before draw")
         }
@@ -115,7 +119,7 @@ class Tree : Branchable {
             branchPositionAsFraction = []
             
             position  = pos
-            relativeDirection = rand(from: -CGFloat.pi/2, to: CGFloat.pi/2)
+            relativeDirection = rand(from: -CGFloat.pi/4, to: CGFloat.pi/4)
             direction = root.direction + relativeDirection
             len = 0
             
@@ -139,10 +143,6 @@ class Tree : Branchable {
             
             branchPositionAsFraction.append(branchPosition)
             let pos = shape.getPointOnStem(fraction: branchPosition)
-            
-            UIColor.blue.setFill()
-            UIRectFill(CGRect(x: pos.x-5, y: pos.y-5, width: 10, height: 10))
-            UIColor.black.setFill()
             
             let newBranch = TreeBranch(scene: scene, from: pos, withRoot: self)
             branch.append(newBranch)
@@ -169,25 +169,72 @@ class Tree : Branchable {
             }
             
             let branching = length > 10 && decision() < 2*length/MAX_LENGTH && branch.count < 5
-            if branching {
+            if branching && NUMBER_OF_BRANCHES < MAX_BRANCHES {
+                
+                // Bend branches based on number of child branches
+                if direction > CGFloat.pi/2 && direction < 3*CGFloat.pi/2 {
+                    relativeDirection += CGFloat.pi/(30*CGFloat(branch.count+1))
+                } else {
+                    relativeDirection -= CGFloat.pi/(30*CGFloat(branch.count+1))
+                }
+                
+
+                
                 sprout()
+                NUMBER_OF_BRANCHES += 1
             }
         }
         
         private func calculateNewBranch() -> CGFloat {
             return 1 - (1 / pow(2, CGFloat(branchPositionAsFraction.count+1)))
         }
+  
         
-        func calculateForceOnRoot() -> CGFloat {
+        func updatePhysics() {
+            // Update the direction of the branch based on the forces on in
+            // Forces: 
+            //      Down:  mass from child branches
+            //      Up:    strength in the branch
+        }
+        
+        func forceOnRoot() -> CGFloat {
             // Sum up the force of the leaf TreeBranches
+            var forceFromChildren : CGFloat = 0
+            for childBranch in branch {
+                forceFromChildren += childBranch.forceOnRoot()
+            }
+            
+            let endpoint = shape.getTopPoint()
+            let distance = abs(position.x - endpoint.x)/20
             
             // Calculate the resistance/strength in the branch
+            let weight      = length
+            let strength    = 100/(pow(distance, 0.4)/length) //+ weight
+            
+            // Update the bend on the branch to strengthen it
+            if strength < forceFromChildren {
+                if direction > CGFloat.pi/2 && direction < 3*CGFloat.pi/4 {
+                    // Leaning to the left
+                    relativeDirection += CGFloat.pi/200
+                } else if direction > CGFloat.pi/4 && direction < CGFloat.pi/2 {
+                    // to the right
+                    relativeDirection -= CGFloat.pi/200
+                }
+            }
             
             // Calculate the force on the root branch
+            let forceOnRoot = weight + forceFromChildren*distance
             
-            // Update the direction of the branch based on the forces on in
+            if root.length > 1000 {
+                print("strength " + String(describing: strength))
+                print("weight " + String(describing: weight))
+                print("forceFromChildren " + String(describing: forceFromChildren))
+                print("forceOnRoot " + String(describing: forceOnRoot))
+                print()
+                
+            }
             
-            return 0;
+            return forceOnRoot
         }
     
     }
