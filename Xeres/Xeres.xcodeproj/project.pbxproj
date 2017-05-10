@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		835D992B1EC312B500BEDB07 /* Sun.swift in Sources */ = {isa = PBXBuildFile; fileRef = 835D992A1EC312B500BEDB07 /* Sun.swift */; };
 		8364794D1EB0929900E4AEC5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8364794C1EB0929900E4AEC5 /* AppDelegate.swift */; };
 		8364794F1EB0929900E4AEC5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8364794E1EB0929900E4AEC5 /* ViewController.swift */; };
 		836479521EB0929900E4AEC5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 836479501EB0929900E4AEC5 /* Main.storyboard */; };
@@ -21,6 +22,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		835D992A1EC312B500BEDB07 /* Sun.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Sun.swift; sourceTree = "<group>"; };
 		836479491EB0929900E4AEC5 /* Xeres.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Xeres.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8364794C1EB0929900E4AEC5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8364794E1EB0929900E4AEC5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				836479601EB09A6800E4AEC5 /* Stem.swift */,
 				8384983C1EBA107600D07741 /* MainScene.sks */,
 				8384983E1EBA10D800D07741 /* PlantScene.swift */,
+				835D992A1EC312B500BEDB07 /* Sun.swift */,
 			);
 			path = Xeres;
 			sourceTree = "<group>";
@@ -157,6 +160,7 @@
 			files = (
 				8384983F1EBA10D800D07741 /* PlantScene.swift in Sources */,
 				881594151EB90A97001C8C7C /* Tree.swift in Sources */,
+				835D992B1EC312B500BEDB07 /* Sun.swift in Sources */,
 				8364794F1EB0929900E4AEC5 /* ViewController.swift in Sources */,
 				8364794D1EB0929900E4AEC5 /* AppDelegate.swift in Sources */,
 				836479611EB09A6800E4AEC5 /* Stem.swift in Sources */,

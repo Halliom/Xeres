@@ -79,6 +79,12 @@ func flip(_ point: CGPoint, inRect: CGRect) -> CGPoint {
     return CGPoint(x: point.x, y: inRect.maxY - point.y)
 }
 
-
+func quadraticBezier(from: CGPoint, to: CGPoint, controlPoint: CGPoint, fraction: CGFloat) -> CGPoint {
+    let lerp1 = (1 - fraction) * (1 - fraction) * from
+    let lerp2 = 2 * (1 - fraction) * fraction * controlPoint
+    let lerp3 = fraction * fraction * to
+    
+    return lerp1 + lerp2 + lerp3
+}
 
 // *******************************************************
