@@ -10,8 +10,6 @@ import SpriteKit
 
 class PlantScene: SKScene {
     
-    static var scene: PlantScene!
-    
     var tree: Tree!
     
     var sun: Sun!
@@ -24,8 +22,8 @@ class PlantScene: SKScene {
         
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         
-        PlantScene.scene = self
-        self.tree = Tree(scene: self)
+        self.tree = Tree()
+        self.addChild(tree)
     }
     
     override func didMove(to view: SKView) {
@@ -34,6 +32,9 @@ class PlantScene: SKScene {
                        minWidth: -self.frame.maxX,
                        maxWidth: self.frame.maxX)
         addChild(sun)
+        
+        // Begin growing the tree
+        tree.grow(from: CGPoint(x: 0, y: -frame.maxY / 2))
         
         // Start receiving gyro updates
         motionManager.startGyroUpdates(to: OperationQueue.current!, withHandler: motionUpdate)
@@ -50,9 +51,7 @@ class PlantScene: SKScene {
     }
     
     override func update(_ currentTime: TimeInterval) {
-        self.removeAllChildren()
-        
-        tree.grow(from: CGPoint(x: 0, y: -frame.maxY / 2))
+        //self.removeAllChildren()
         
         tree.update()
         
