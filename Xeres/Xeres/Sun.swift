@@ -11,16 +11,23 @@ import SpriteKit
 
 class Sun: SKNode {
     
-    let minWidth: CGFloat
-    let maxWidth: CGFloat
+    let radius: CGFloat = 50;
     
-    init(position: CGPoint, minWidth: CGFloat, maxWidth: CGFloat) {
-        self.minWidth = minWidth
-        self.maxWidth = maxWidth
+    // Suns path, going in a curve
+    let start: CGPoint
+    let top: CGPoint
+    let end: CGPoint
+    var pathProgress: CGFloat
+    
+    init(position: CGPoint, topOfScreen: CGFloat, minWidth: CGFloat, maxWidth: CGFloat) {
+        self.start = CGPoint(x: minWidth, y: topOfScreen - radius)
+        self.top = CGPoint(x: (minWidth + maxWidth) / 2, y: topOfScreen)
+        self.end = CGPoint(x: maxWidth, y: topOfScreen - radius)
+        self.pathProgress = 0.5
         
         super.init()
         
-        self.position = position
+        move(amount: 0)
         updateRenderInfo()
     }
     
@@ -28,13 +35,20 @@ class Sun: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func move(force: CGFloat) {
-        let newPos = self.position.x + force
-        self.position.x = max(minWidth, min(maxWidth, newPos))
+    func move(amount: CGFloat) {
+        pathProgress += amount
+        
+        if pathProgress > 1.0 {
+            pathProgress = 1.0
+        } else if pathProgress < 0.0 {
+            pathProgress = 0.0
+        }
+        
+        self.position = quadraticBezier(from: start, to: end, controlPoint: top, fraction: pathProgress)
     }
     
     func updateRenderInfo() {
-        var shapeNode = SKShapeNode(circleOfRadius: 175)
+        var shapeNode = SKShapeNode(circleOfRadius: radius)
         shapeNode.fillColor = UIColor.yellow
         shapeNode.strokeColor = UIColor.white
         shapeNode.position = self.position
