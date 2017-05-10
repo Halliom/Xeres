@@ -30,6 +30,7 @@ class PlantScene: SKScene {
         //self.tree = Tree(scene: self)
         
         self.sun = Sun(position: CGPoint(x: 0, y: 0),
+                       topOfScreen: self.frame.maxY - 175,
                        minWidth: -self.frame.maxX,
                        maxWidth: self.frame.maxX)
         addChild(sun)
@@ -55,7 +56,7 @@ class PlantScene: SKScene {
         
         //tree.update()
         
-        sun.move(force: CGFloat(accumulatedRotation))
+        sun.move(amount: CGFloat(accumulatedRotation) * 0.01)
         accumulatedRotation = 0
     }
 }
