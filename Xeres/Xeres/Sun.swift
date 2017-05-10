@@ -9,8 +9,12 @@
 import Foundation
 import SpriteKit
 
+/**
+ * Class for rendering a big glowing sun in the sky.
+ */
 class Sun: SKNode {
     
+    // The radius of the sun
     let radius: CGFloat = 40;
     
     // Suns path, going in a curve
@@ -35,6 +39,18 @@ class Sun: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /**
+     * Returns the (normalised) direction to the sun from the given point.
+     */
+    func getDirectionToSun(from: CGPoint) -> CGPoint {
+        return normalize(self.position - from)
+    }
+    
+    /**
+     * Moves the sun a given amount. Increments the progress variable
+     * which ranges from 0 to 1 where 0 is all to the left side and 1
+     * is all to the right side.
+     */
     func move(amount: CGFloat) {
         pathProgress += amount
         
@@ -47,7 +63,10 @@ class Sun: SKNode {
         self.position = quadraticBezier(from: start, to: end, controlPoint: top, fraction: pathProgress)
     }
     
-    func updateRenderInfo() {
+    /**
+     * Updates the render info for the sun.
+     */
+    func createRenderInfo() {
         var shapeNode = SKShapeNode(circleOfRadius: radius)
         shapeNode.fillColor = UIColor(red: 1.0, green: 207 / 255, blue: 90 / 255, alpha: 1.0)
         
