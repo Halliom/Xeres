@@ -62,7 +62,8 @@ class Tree: SKNode, Branchable {
     
     // Start growing the tree
     func grow(from pos: CGPoint) {
-        trunk = TreeBranch(scene: scene!, from: pos, withRoot: self)
+        trunk = TreeBranch(from: CGPoint(), withRoot: self)
+        self.addChild(trunk!)
     }
     
     // Update the structure of the tree
@@ -74,13 +75,12 @@ class Tree: SKNode, Branchable {
         }
     }
     
-    class TreeBranch : Branchable {
+    class TreeBranch: SKNode, Branchable {
         
         private let root : Branchable
         private var branch : [TreeBranch]
         private var branchPositionAsFraction : [CGFloat]
         
-        private var position : CGPoint
         private let direction : CGPoint
         
         private var len : CGFloat
@@ -91,21 +91,25 @@ class Tree: SKNode, Branchable {
         }
         
         private var shape : Stem!
-        private let scene: SKScene
         
-        init(scene: SKScene, from pos: CGPoint, withRoot root: Branchable) {
+        init(from pos: CGPoint, withRoot root: Branchable) {
             self.root = root
             
             branch = []
             branchPositionAsFraction = []
             
-            position  = pos
             direction = calculateDirection()
             len = 0
             
-            self.scene = scene
+            super.init()
             shape = Stem(dir: direction)
-            scene.addChild(shape)
+            self.addChild(shape)
+            
+            self.position = pos
+        }
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
         }
         
         // The TreeBranch grows in length
@@ -128,13 +132,12 @@ class Tree: SKNode, Branchable {
             UIRectFill(CGRect(x: pos.x-5, y: pos.y-5, width: 10, height: 10))
             UIColor.black.setFill()
             
-            let newBranch = TreeBranch(scene: scene, from: pos, withRoot: self)
+            let newBranch = TreeBranch(from: pos, withRoot: self)
             branch.append(newBranch)
             newBranch.update(from: pos)
         }
         
         func update(from position: CGPoint) {
-            
             self.position = position
             
             let growing = length < MAX_LENGTH && root.length/self.length > 1.5 && decision() > 0.15
@@ -142,7 +145,6 @@ class Tree: SKNode, Branchable {
             if growing {
                 grow()
             }
-            
             
             shape.update(position, length: len)
             
@@ -162,7 +164,5 @@ class Tree: SKNode, Branchable {
         private func calculateNewBranch() -> CGFloat {
             return 1 - (1 / pow(2, CGFloat(branchPositionAsFraction.count+1)))
         }
-    
     }
 }
-
