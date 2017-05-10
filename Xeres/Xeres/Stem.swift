@@ -36,7 +36,6 @@ class Stem: SKNode {
         
         super.init()
         
-        self.name = "Stem"
         self.addChild(shapeNode)
     }
     
@@ -68,16 +67,14 @@ class Stem: SKNode {
         return end
     }
     
-    func update(_ position: CGPoint, length: CGFloat) {
-        if length != self.length || position != start {
+    func update(length: CGFloat) {
+        if length != self.length {
             // Set new positions & length
-            start = position
             end = position + (direction * length)
             self.length = length
             
             updatePath()
         }
         shapeNode.path = path.cgPath
-        
     }
 }
