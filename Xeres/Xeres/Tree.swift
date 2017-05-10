@@ -12,7 +12,7 @@ import SpriteKit
 
 fileprivate func randomDirection() -> CGFloat {
     
-    return rand(from: 0, to: CGFloat.pi)
+    return rand(from: 0*CGFloat.pi, to: CGFloat.pi)
 }
 
 fileprivate func decision() -> CGFloat {
@@ -37,16 +37,27 @@ protocol Branchable {
 
 }
 
-
+fileprivate let MAX_LENGTH : CGFloat = 200
 
 class Tree : Branchable {
     
-    //static var sharedInstance: Tree
+    private var position : CGPoint?
+    private var trunk : TreeBranch?
     
-    let scene: SKScene
+    // Set len to maximum value so trunk always can grow
+    private var len : CGFloat
+    var length : CGFloat {
+        get {
+            return len
+        }
+    }
+
+    private let scene: SKScene
+    
     
     init(scene: SKScene) {
         self.scene = scene
+        len = CGFloat.greatestFiniteMagnitude
     }
     
     // Start growing the tree
@@ -57,7 +68,7 @@ class Tree : Branchable {
         }
     }
     
-    // Draw the tree, animating it as it goes
+    // Update the structure of the tree
     func update() {
         if let t = trunk {
             t.update(from: position!)
@@ -66,25 +77,34 @@ class Tree : Branchable {
         }
     }
     
-    private var position : CGPoint?
-    private var trunk : TreeBranch?
-    
-    // Set len to maximum value so trunk always can grow
-    private var len : CGFloat = CGFloat.greatestFiniteMagnitude
-    var length : CGFloat {
-        get {
-            return len
-        }
-    }
-
     class TreeBranch : Branchable {
         
-        let scene: SKScene
+        private let root : Branchable
+        private var branch : [TreeBranch]
+        private var branchPositionAsFraction : [CGFloat]
+        
+        private var position : CGPoint
+        private let direction : CGPoint
+        
+        private var len : CGFloat
+        var length : CGFloat {
+            get {
+                return len
+            }
+        }
+        
+        private var shape : Stem!
+        private let scene: SKScene
         
         init(scene: SKScene, from pos: CGPoint, withRoot root: Branchable) {
             self.root = root
+            
+            branch = []
+            branchPositionAsFraction = []
+            
             position  = pos
             direction = calculateDirection()
+            len = 0
             
             self.scene = scene
             shape = Stem(dir: direction)
@@ -93,20 +113,34 @@ class Tree : Branchable {
         
         // The TreeBranch grows in length
         private func grow() {
-            
-            len += 30
+            if len == 0 {
+                len = 1
+            } else {
+                len *= 1.01
+            }
         }
         
         // A new TreeBranch sprouts from this one
         private func sprout() {
+            let branchPosition = calculateNewBranch()
             
+            branchPositionAsFraction.append(branchPosition)
+            let pos = shape.getPointOnStem(fraction: branchPosition)
+            
+            UIColor.blue.setFill()
+            UIRectFill(CGRect(x: pos.x-5, y: pos.y-5, width: 10, height: 10))
+            UIColor.black.setFill()
+            
+            let newBranch = TreeBranch(scene: scene, from: pos, withRoot: self)
+            branch.append(newBranch)
+            newBranch.update(from: pos)
         }
         
         func update(from position: CGPoint) {
             
             self.position = position
             
-            let growing = root.length/self.length > 1.1 //&& decision() > 0.15
+            let growing = length < MAX_LENGTH && root.length/self.length > 1.5 && decision() > 0.15
             
             if growing {
                 grow()
@@ -119,26 +153,12 @@ class Tree : Branchable {
                 let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
                 branch[i].update(from: pos)
                 
-                UIColor.blue.setFill()
-                UIRectFill(CGRect(x: pos.x-5, y: pos.y-5, width: 10, height: 10))
-                UIColor.black.setFill()
             }
             
-            let branching = length > 10 && decision() > 0.6
+            let branching = length > 10 && decision() < 2*length/MAX_LENGTH && branch.count < 5
             
             if branching {
-                let branchPosition = calculateNewBranch()
-                
-                branchPositionAsFraction.append(branchPosition)
-                let pos = shape.getPointOnStem(fraction: branchPosition)
-                
-                UIColor.blue.setFill()
-                UIRectFill(CGRect(x: pos.x-5, y: pos.y-5, width: 10, height: 10))
-                UIColor.black.setFill()
-                
-                let newBranch = TreeBranch(scene: scene, from: pos, withRoot: self)
-                branch.append(newBranch)
-                newBranch.update(from: pos)
+                sprout()
             }
         }
         
@@ -146,21 +166,6 @@ class Tree : Branchable {
             return 1 - (1 / pow(2, CGFloat(branchPositionAsFraction.count+1)))
         }
     
-        private let root : Branchable
-        private var branch : [TreeBranch] = []
-        private var branchPositionAsFraction : [CGFloat] = []
-        
-        private var position : CGPoint
-        private let direction : CGPoint
-        
-        private var len : CGFloat = 0
-        var length : CGFloat {
-            get {
-                return len
-            }
-        }
-        
-        private var shape : Stem!
     }
 }
 
