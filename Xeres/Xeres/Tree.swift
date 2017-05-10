@@ -133,6 +133,7 @@ class Tree: SKNode, Branchable {
             UIColor.black.setFill()
             
             let newBranch = TreeBranch(from: pos, withRoot: self)
+            self.addChild(newBranch)
             branch.append(newBranch)
             newBranch.update(from: pos)
         }
@@ -146,12 +147,11 @@ class Tree: SKNode, Branchable {
                 grow()
             }
             
-            shape.update(position, length: len)
+            shape.update(length: len)
             
             for i in 0..<branch.count {
                 let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
                 branch[i].update(from: pos)
-                
             }
             
             let branching = length > 10 && decision() < 2*length/MAX_LENGTH && branch.count < 5
