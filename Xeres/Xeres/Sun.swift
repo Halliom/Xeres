@@ -11,7 +11,7 @@ import SpriteKit
 
 class Sun: SKNode {
     
-    let radius: CGFloat = 50;
+    let radius: CGFloat = 40;
     
     // Suns path, going in a curve
     let start: CGPoint
@@ -49,8 +49,11 @@ class Sun: SKNode {
     
     func updateRenderInfo() {
         var shapeNode = SKShapeNode(circleOfRadius: radius)
-        shapeNode.fillColor = UIColor.yellow
-        shapeNode.strokeColor = UIColor.white
+        shapeNode.fillColor = UIColor(red: 1.0, green: 207 / 255, blue: 90 / 255, alpha: 1.0)
+        
+        shapeNode.strokeColor = UIColor(red: 1.0, green: 213 / 255, blue: 110 / 255, alpha: 1.0)
+        shapeNode.glowWidth = 20
+        
         shapeNode.position = self.position
         
         self.addChild(shapeNode)
