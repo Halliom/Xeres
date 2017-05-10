@@ -21,17 +21,20 @@ class PlantScene: SKScene {
     
     override init(size: CGSize) {
         super.init(size: size)
+        
+        self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
     }
     
     override func didMove(to view: SKView) {
         PlantScene.scene = self
         //self.tree = Tree(scene: self)
         
-        self.sun = Sun(position: CGPoint(x: frame.midX, y: frame.midY),
-                       minWidth: frame.minX,
-                       maxWidth: frame.maxX)
+        self.sun = Sun(position: CGPoint(x: 0, y: 0),
+                       minWidth: -self.frame.maxX,
+                       maxWidth: self.frame.maxX)
         addChild(sun)
         
+        // Start receiving gyro updates
         motionManager.startGyroUpdates(to: OperationQueue.current!, withHandler: motionUpdate)
     }
     
