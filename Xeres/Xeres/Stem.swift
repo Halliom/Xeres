@@ -35,7 +35,9 @@ class Stem: SKNode {
         shapeNode = SKShapeNode(path: path.cgPath)
         
         super.init()
-        super.addChild(shapeNode)
+        
+        self.name = "Stem"
+        self.addChild(shapeNode)
     }
     
     required init?(coder aDecoder: NSCoder) {
