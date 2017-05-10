@@ -29,49 +29,46 @@ fileprivate func calculateDirection() -> CGPoint {
     return CGPoint(x: x, y: y)
 }
 
-
 protocol Branchable {
     var length : CGFloat {
         get
     }
-
 }
 
 fileprivate let MAX_LENGTH : CGFloat = 200
 
-class Tree : Branchable {
+class Tree: SKNode, Branchable {
     
-    private var position : CGPoint?
     private var trunk : TreeBranch?
     
     // Set len to maximum value so trunk always can grow
     private var len : CGFloat
+    
     var length : CGFloat {
         get {
             return len
         }
     }
-
-    private let scene: SKScene
     
-    
-    init(scene: SKScene) {
-        self.scene = scene
+    override init() {
         len = CGFloat.greatestFiniteMagnitude
+
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // Start growing the tree
     func grow(from pos: CGPoint) {
-        if position == nil {
-            position = pos
-            trunk = TreeBranch(scene: scene, from: pos, withRoot: self)
-        }
+        trunk = TreeBranch(scene: scene!, from: pos, withRoot: self)
     }
     
     // Update the structure of the tree
     func update() {
         if let t = trunk {
-            t.update(from: position!)
+            t.update(from: position)
         } else {
             print("Call grow before draw")
         }
