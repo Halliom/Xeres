@@ -128,10 +128,6 @@ class Tree: SKNode, Branchable {
             branchPositionAsFraction.append(branchPosition)
             let pos = shape.getPointOnStem(fraction: branchPosition)
             
-            UIColor.blue.setFill()
-            UIRectFill(CGRect(x: pos.x-5, y: pos.y-5, width: 10, height: 10))
-            UIColor.black.setFill()
-            
             let newBranch = TreeBranch(from: pos, withRoot: self)
             self.addChild(newBranch)
             branch.append(newBranch)
