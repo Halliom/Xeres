@@ -23,12 +23,12 @@ class PlantScene: SKScene {
         super.init(size: size)
         
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        
+        PlantScene.scene = self
+        self.tree = Tree(scene: self)
     }
     
     override func didMove(to view: SKView) {
-        PlantScene.scene = self
-        //self.tree = Tree(scene: self)
-        
         self.sun = Sun(position: CGPoint(x: 0, y: 0),
                        topOfScreen: self.frame.maxY - 175,
                        minWidth: -self.frame.maxX,
@@ -50,11 +50,11 @@ class PlantScene: SKScene {
     }
     
     override func update(_ currentTime: TimeInterval) {
-        //self.removeAllChildren()
+        self.removeAllChildren()
         
-        //tree.grow(from: CGPoint(x: frame.midX, y: frame.minY))
+        tree.grow(from: CGPoint(x: 0, y: -frame.maxY / 2))
         
-        //tree.update()
+        tree.update()
         
         sun.move(amount: CGFloat(accumulatedRotation) * 0.01)
         accumulatedRotation = 0

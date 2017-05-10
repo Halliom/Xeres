@@ -32,7 +32,7 @@ class Sun: SKNode {
         super.init()
         
         move(amount: 0)
-        updateRenderInfo()
+        createRenderInfo()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -67,7 +67,7 @@ class Sun: SKNode {
      * Updates the render info for the sun.
      */
     func createRenderInfo() {
-        var shapeNode = SKShapeNode(circleOfRadius: radius)
+        let shapeNode = SKShapeNode(circleOfRadius: radius)
         shapeNode.fillColor = UIColor(red: 1.0, green: 207 / 255, blue: 90 / 255, alpha: 1.0)
         
         shapeNode.strokeColor = UIColor(red: 1.0, green: 213 / 255, blue: 110 / 255, alpha: 1.0)
