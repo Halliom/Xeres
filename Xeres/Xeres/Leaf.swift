@@ -22,7 +22,7 @@ class Leaf: SKNode {
         self.position = offset
         
         createPath(in: CGRect(x: 0, y: 0, width: 100, height: 100),
-                   from: CGPoint(), inDirection: CGFloat.pi / 4)
+                   from: CGPoint(), inDirection: atan(direction.y / direction.x))
         shapeNode.path = shape.cgPath
         shapeNode.fillColor = UIColor(displayP3Red: 0.0, green: 150 / 255, blue: 50 / 255, alpha: 1.0)
         self.addChild(shapeNode)
