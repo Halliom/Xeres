@@ -39,9 +39,8 @@ fileprivate let MAX_LENGTH : CGFloat = 200
 
 class Tree: SKNode, Branchable {
     
-    private var trunk : TreeBranch?
+    private var trunk: TreeBranch?
     
-    // Set len to maximum value so trunk always can grow
     private var len : CGFloat
     
     var length : CGFloat {
@@ -51,6 +50,7 @@ class Tree: SKNode, Branchable {
     }
     
     override init() {
+        // Set len to maximum value so trunk always can grow
         len = CGFloat.greatestFiniteMagnitude
 
         super.init()
