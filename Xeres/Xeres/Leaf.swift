@@ -7,19 +7,36 @@
 //
 
 import Foundation
-import UIKit
+import SpriteKit
 
-class Leaf {
+class Leaf: SKNode {
     
+    private let shape: UIBezierPath
+    private let shapeNode: SKShapeNode
     
-    private let shape = UIBezierPath()
+    init(offset: CGPoint, direction: CGPoint) {
+        shape = UIBezierPath()
+        shapeNode = SKShapeNode()
+        
+        super.init()
+        self.position = offset
+        
+        createPath(in: CGRect(x: 0, y: 0, width: 100, height: 100),
+                   from: CGPoint(), inDirection: CGFloat.pi / 4)
+        shapeNode.path = shape.cgPath
+        shapeNode.fillColor = UIColor(displayP3Red: 0.0, green: 150 / 255, blue: 50 / 255, alpha: 1.0)
+        self.addChild(shapeNode)
+    }
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
-    // Draws a leaf on the current drawing context
+    // Creates a leaf node fo
     // Angles goes clockwise as we're dealing with a left handed (?) coordinate system
     // Comment: The rotation and scale should be turned into CGAffineTransform matrices
     // to shorten the code vastly!
-    func draw(in bound: CGRect, from start: CGPoint, inDirection angle: CGFloat) {
+    func createPath(in bound: CGRect, from start: CGPoint, inDirection angle: CGFloat) {
         
         // This should be turned into something more flexible
         var from = CGPoint(x: 0,   y: 0)
@@ -28,8 +45,6 @@ class Leaf {
         
         // Sets angle=0 to mean "to the right"
         let rotationAngle = angle - CGFloat.pi/4
-        
-        
         
         // Put the leaf into position, to calculate scale factors
         from = rotateAroundOrigin(from, withAngle: rotationAngle)
@@ -42,8 +57,6 @@ class Leaf {
         
         let translate = CGAffineTransform(translationX: start.x, y: start.y)
         shape.apply(translate)
-        
-        
         
         // Calculate scale factors depending on draw direction from 'start'
         
@@ -75,9 +88,6 @@ class Leaf {
         
         scaleFactor = min(scaleFactX, scaleFactY)
         
-        
-        
-        
         // Remake the shape of the leaf with correct scale
         from = scale(from, from: from, by: scaleFactor)
         to   = scale(to, from: from, by: scaleFactor)
@@ -89,12 +99,5 @@ class Leaf {
         shape.close()
         
         shape.apply(translate)
-        
-        // Draw leaf
-        let color = UIColor.red
-        color.setFill()
-        shape.fill()
-        
     }
-    
 }
