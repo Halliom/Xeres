@@ -77,11 +77,12 @@ class Tree: SKNode, Branchable {
     
     class TreeBranch: SKNode, Branchable {
         
-        private let root : Branchable
-        private var branch : [TreeBranch]
-        private var branchPositionAsFraction : [CGFloat]
+        private let root: Branchable
+        private var branch: [TreeBranch]
+        private var branchPositionAsFraction: [CGFloat]
         
-        private let direction : CGPoint
+        private let direction: CGPoint
+        private var leaf: Leaf?
         
         private var len : CGFloat
         var length : CGFloat {
@@ -141,6 +142,10 @@ class Tree: SKNode, Branchable {
             
             if growing {
                 grow()
+            } else {
+                if leaf == nil {
+                    leaf = Leaf(offset: shape.getPointOnStem(fraction: 1.0), direction: direction)
+                }
             }
             
             shape.update(length: len)
