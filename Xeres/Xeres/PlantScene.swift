@@ -21,6 +21,7 @@ class PlantScene: SKScene {
         super.init(size: size)
         
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        self.backgroundColor = UIColor.white
         
         self.tree = Tree()
         self.addChild(tree)

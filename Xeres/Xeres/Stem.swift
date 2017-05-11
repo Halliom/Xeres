@@ -76,5 +76,6 @@ class Stem: SKNode {
             updatePath()
         }
         shapeNode.path = path.cgPath
+        shapeNode.strokeColor = UIColor(red: 125 / 255, green: 206 / 255, blue: 130 / 255, alpha: 1.0)
     }
 }
