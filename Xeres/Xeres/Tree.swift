@@ -36,11 +36,11 @@ fileprivate func polarToCartesian(direction: CGFloat) -> CGPoint {
     return CGPoint(x: x, y: y)
 }
 
-
 protocol Branchable {
     var length : CGFloat {
         get
     }
+  
     var direction: CGFloat {
         get
     }
@@ -57,29 +57,31 @@ class Tree : Branchable {
     private var position : CGPoint?
     private var trunk : TreeBranch?
     var direction = CGFloat.pi/2
+
     
-    // Set len to maximum value so trunk always can grow
     private var len : CGFloat
+    
     var length : CGFloat {
         get {
             return len
         }
     }
-
-    private let scene: SKScene
     
-    
-    init(scene: SKScene) {
-        self.scene = scene
+    override init() {
+        // Set len to maximum value so trunk always can grow
         len = CGFloat.greatestFiniteMagnitude
+
+        super.init()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     // Start growing the tree
     func grow(from pos: CGPoint) {
-        if position == nil {
-            position = pos
-            trunk = TreeBranch(scene: scene, from: pos, withRoot: self)
-        }
+        trunk = TreeBranch(from: CGPoint(), withRoot: self)
+        self.addChild(trunk!)
     }
     
     // Update the structure of the tree
@@ -87,12 +89,13 @@ class Tree : Branchable {
         if let t = trunk {
             t.update(from: position!)
             t.updatePhysics()
+          
         } else {
             print("Call grow before draw")
         }
     }
     
-    class TreeBranch : Branchable {
+    class TreeBranch: SKNode, Branchable {
         
         private let root : Branchable
         private var branch : [TreeBranch]
@@ -111,9 +114,8 @@ class Tree : Branchable {
         }
         
         private var shape : Stem!
-        private let scene: SKScene
         
-        init(scene: SKScene, from pos: CGPoint, withRoot root: Branchable) {
+        init(from pos: CGPoint, withRoot root: Branchable) {
             self.root = root
             
             branch = []
@@ -125,9 +127,14 @@ class Tree : Branchable {
             direction = root.direction + relativeDirection
             len = 0
             
-            self.scene = scene
+            super.init()
             shape = Stem(dir: polarToCartesian(direction: direction))
-            scene.addChild(shape)
+            self.addChild(shape)
+        }
+        
+        required init?(coder aDecoder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
+
         }
         
         // The TreeBranch grows in length
@@ -147,27 +154,32 @@ class Tree : Branchable {
             let pos = shape.getPointOnStem(fraction: branchPosition)
             
             let newBranch = TreeBranch(scene: scene, from: pos, withRoot: self)
+            self.addChild(newBranch)
+
             branch.append(newBranch)
             newBranch.update(from: pos)
         }
         
         func update(from position: CGPoint) {
-            
             self.position = position
             
             let growing = length < MAX_LENGTH && root.length/self.length > 1.5 && decision() > 0.15
             if growing {
                 grow()
+            } else {
+                if leaf == nil {
+                    leaf = Leaf(offset: shape.getTopPoint(), direction: direction)
+                    self.addChild(leaf!)
+                }
             }
             
             direction = root.direction + relativeDirection
-            
             shape.update(position, length: len, dir: polarToCartesian(direction: direction))
+
             
             for i in 0..<branch.count {
                 let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
                 branch[i].update(from: pos)
-                
             }
             
             let branching = length > 10 && decision() < 2*length/MAX_LENGTH && branch.count < 5
@@ -212,8 +224,5 @@ class Tree : Branchable {
                 }
             }
         }
-        
-    
     }
 }
-

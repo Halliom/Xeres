@@ -16,7 +16,7 @@ class Stem: SKNode {
     var direction: CGPoint
     
     private var length: CGFloat
-    private var start: CGPoint
+    private let start: CGPoint
     private var end: CGPoint
     private var bezierDirection: CGPoint
     private let shapeNode: SKShapeNode
@@ -36,7 +36,8 @@ class Stem: SKNode {
         shapeNode = SKShapeNode(path: path.cgPath)
         
         super.init()
-        super.addChild(shapeNode)
+        
+        self.addChild(shapeNode)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -47,7 +48,6 @@ class Stem: SKNode {
         let controlPoint = start + (bezierDirection * length)
         
         path = UIBezierPath()
-        path.lineWidth = 3.0
         
         path.move(to: start)
         path.addQuadCurve(to: end, controlPoint: controlPoint)
@@ -75,12 +75,14 @@ class Stem: SKNode {
             bezierDirection = CGPoint(x: seedDirection * dir.x, y: (1.0 - seedDirection) * dir.y) * 0.7
             
             start = position
+
             end = position + (direction * length)
             self.length = length
             
             updatePath()
         }
         shapeNode.path = path.cgPath
-        
+        shapeNode.strokeColor = UIColor(red: 125 / 255, green: 206 / 255, blue: 130 / 255, alpha: 1.0)
+        shapeNode.lineWidth = 3.0
     }
 }
