@@ -51,7 +51,7 @@ class PlantScene: SKScene {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func update(_ currentTime: TimeInterval) {        
+    override func update(_ currentTime: TimeInterval) {
         tree.update()
         
         sun.move(amount: CGFloat(accumulatedRotation) * 0.01)

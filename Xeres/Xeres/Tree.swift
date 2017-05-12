@@ -144,7 +144,7 @@ class Tree: SKNode, Branchable {
                 grow()
             } else {
                 if leaf == nil {
-                    leaf = Leaf(offset: shape.getPointOnStem(fraction: 1.0), direction: direction)
+                    leaf = Leaf(offset: shape.getTopPoint(), direction: direction)
                     self.addChild(leaf!)
                 }
             }
