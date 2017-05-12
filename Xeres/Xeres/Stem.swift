@@ -13,13 +13,14 @@ class Stem: SKNode {
     
     var path: UIBezierPath
     
-    let direction: CGPoint
+    var direction: CGPoint
     
     private var length: CGFloat
     private let start: CGPoint
     private var end: CGPoint
     private var bezierDirection: CGPoint
     private let shapeNode: SKShapeNode
+    private let seedDirection : CGFloat
     
     init(dir: CGPoint) {
         path = UIBezierPath()
@@ -29,8 +30,8 @@ class Stem: SKNode {
         start = CGPoint(x: 0, y: 0)
         end = CGPoint(x: 0, y: 0)
         
-        let rand = 0.15 * CGFloat(arc4random()) / CGFloat(Int32.max)
-        bezierDirection = CGPoint(x: rand * dir.x, y: (1.0 - rand) * dir.y) * 0.7
+        seedDirection = 0.15 * CGFloat(arc4random()) / CGFloat(Int32.max)
+        bezierDirection = CGPoint(x: seedDirection * dir.x, y: (1.0 - seedDirection) * dir.y) * 0.7
         
         shapeNode = SKShapeNode(path: path.cgPath)
         
@@ -66,9 +67,15 @@ class Stem: SKNode {
         return end
     }
     
-    func update(length: CGFloat) {
-        if length != self.length {
+    func update(_ position: CGPoint, length: CGFloat, dir: CGPoint) {
+        if length != self.length || position != start || dir != direction {
             // Set new positions & length
+            direction = dir
+
+            bezierDirection = CGPoint(x: seedDirection * dir.x, y: (1.0 - seedDirection) * dir.y) * 0.7
+            
+            start = position
+
             end = position + (direction * length)
             self.length = length
             
