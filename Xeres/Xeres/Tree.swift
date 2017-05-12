@@ -192,11 +192,6 @@ class Tree : Branchable {
   
         
         func updatePhysics() {
-            // Update the direction of the branch based on the forces on it
-            // Forces: 
-            //      Down:  mass from child branches
-            //      Up:    strength in the branch
-            
             
             let currentNumSubBranches = numberOfSubBranches()
             let addedWeight = currentNumSubBranches - numSubBranches
@@ -216,8 +211,6 @@ class Tree : Branchable {
                     b.updatePhysics()
                 }
             }
-            
-            
         }
         
     
