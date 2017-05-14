@@ -87,4 +87,8 @@ func quadraticBezier(from: CGPoint, to: CGPoint, controlPoint: CGPoint, fraction
     return lerp1 + lerp2 + lerp3
 }
 
+func norm(_ p:CGPoint) -> CGFloat {
+    return sqrt(pow(p.x, 2) + pow(p.y, 2))
+}
+
 // *******************************************************

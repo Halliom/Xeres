@@ -67,7 +67,7 @@ class Stem: SKNode {
         return end
     }
     
-    func update(_ position: CGPoint, length: CGFloat, dir: CGPoint) {
+    func update(length: CGFloat, dir: CGPoint) {
         if length != self.length || position != start || dir != direction {
             // Set new positions & length
             direction = dir
@@ -76,7 +76,7 @@ class Stem: SKNode {
             
             start = position
 
-            end = position + (direction * length)
+            end = start + (direction * length)
             self.length = length
             
             updatePath()

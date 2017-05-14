@@ -86,7 +86,7 @@ class Tree : SKNode, Branchable {
     func update() {
         if let t = trunk {
             t.update(from: position)
-            //t.updatePhysics()
+            t.updatePhysics()
           
         } else {
             print("Call grow before draw")
@@ -110,8 +110,10 @@ class Tree : SKNode, Branchable {
             }
         }
         
+        private let branchNo : Int
+        
         private var shape : Stem!
-        //private var leaf : Leaf?
+        private var leaf : Leaf?
         
         init(from pos: CGPoint, withRoot root: Branchable) {
             self.root = root
@@ -124,10 +126,13 @@ class Tree : SKNode, Branchable {
             direction = root.direction + relativeDirection
             len = 0
             
+            branchNo = NUMBER_OF_BRANCHES
+            
             super.init()
-            position  = pos
             shape = Stem(dir: polarToCartesian(direction: direction))
             self.addChild(shape)
+            self.position  = pos
+            
         }
         
         required init?(coder aDecoder: NSCoder) {
@@ -155,24 +160,24 @@ class Tree : SKNode, Branchable {
             self.addChild(newBranch)
 
             branch.append(newBranch)
-            newBranch.update(from: pos)
         }
         
         func update(from position: CGPoint) {
+            
             self.position = position
             
             let growing = length < MAX_LENGTH && root.length/self.length > 1.5 && decision() > 0.15
             if growing {
                 grow()
             } else {
-//                if leaf == nil {
-//                    leaf = Leaf(offset: shape.getTopPoint(), direction: polarToCartesian(direction: direction))
-//                    self.addChild(leaf!)
-//                }
+                if leaf == nil {
+                    leaf = Leaf(offset: shape.getTopPoint(), direction: polarToCartesian(direction: direction))
+                    self.addChild(leaf!)
+                }
             }
             
             direction = root.direction + relativeDirection
-            shape.update(position, length: len, dir: polarToCartesian(direction: direction))
+            shape.update(length: len, dir: polarToCartesian(direction: direction))
 
             
             for i in 0..<branch.count {
