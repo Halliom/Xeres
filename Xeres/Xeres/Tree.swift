@@ -51,10 +51,8 @@ fileprivate let MAX_LENGTH : CGFloat = 200
 fileprivate let MAX_BRANCHES = 100
 fileprivate var NUMBER_OF_BRANCHES = 0
 
-class Tree : Branchable {
+class Tree : SKNode, Branchable {
 
-    
-    private var position : CGPoint?
     private var trunk : TreeBranch?
     var direction = CGFloat.pi/2
 
@@ -87,8 +85,8 @@ class Tree : Branchable {
     // Update the structure of the tree
     func update() {
         if let t = trunk {
-            t.update(from: position!)
-            t.updatePhysics()
+            t.update(from: position)
+            //t.updatePhysics()
           
         } else {
             print("Call grow before draw")
@@ -102,7 +100,6 @@ class Tree : Branchable {
         private var branchPositionAsFraction : [CGFloat]
         private var numSubBranches : Int
         
-        private var position : CGPoint
         var direction : CGFloat
         private var relativeDirection : CGFloat
         
@@ -114,6 +111,7 @@ class Tree : Branchable {
         }
         
         private var shape : Stem!
+        //private var leaf : Leaf?
         
         init(from pos: CGPoint, withRoot root: Branchable) {
             self.root = root
@@ -122,12 +120,12 @@ class Tree : Branchable {
             branchPositionAsFraction = []
             numSubBranches = 0
             
-            position  = pos
             relativeDirection = rand(from: -CGFloat.pi/4, to: CGFloat.pi/4)
             direction = root.direction + relativeDirection
             len = 0
             
             super.init()
+            position  = pos
             shape = Stem(dir: polarToCartesian(direction: direction))
             self.addChild(shape)
         }
@@ -153,7 +151,7 @@ class Tree : Branchable {
             branchPositionAsFraction.append(branchPosition)
             let pos = shape.getPointOnStem(fraction: branchPosition)
             
-            let newBranch = TreeBranch(scene: scene, from: pos, withRoot: self)
+            let newBranch = TreeBranch(from: pos, withRoot: self)
             self.addChild(newBranch)
 
             branch.append(newBranch)
@@ -167,10 +165,10 @@ class Tree : Branchable {
             if growing {
                 grow()
             } else {
-                if leaf == nil {
-                    leaf = Leaf(offset: shape.getTopPoint(), direction: direction)
-                    self.addChild(leaf!)
-                }
+//                if leaf == nil {
+//                    leaf = Leaf(offset: shape.getTopPoint(), direction: polarToCartesian(direction: direction))
+//                    self.addChild(leaf!)
+//                }
             }
             
             direction = root.direction + relativeDirection

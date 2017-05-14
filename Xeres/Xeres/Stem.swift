@@ -16,7 +16,7 @@ class Stem: SKNode {
     var direction: CGPoint
     
     private var length: CGFloat
-    private let start: CGPoint
+    private var start: CGPoint
     private var end: CGPoint
     private var bezierDirection: CGPoint
     private let shapeNode: SKShapeNode
