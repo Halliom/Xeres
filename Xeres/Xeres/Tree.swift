@@ -15,6 +15,8 @@ fileprivate func randomDirection() -> CGFloat {
     return rand(from: 0*CGFloat.pi, to: CGFloat.pi)
 }
 
+
+// will always be between 0 and 1
 fileprivate func decision() -> CGFloat {
     
     return rand(from: 0, to: 1)
@@ -55,10 +57,11 @@ protocol Branchable {
 
 fileprivate let MAX_LENGTH: CGFloat         = 300
 fileprivate let MAX_BRANCHES                = 100
-fileprivate let BASE_GROWTH_SPEED: CGFloat  = 1.01
+fileprivate let BASE_GROWTH_SPEED: CGFloat  = 1.005
 fileprivate let MAX_CHILD_BRANCHES          = 5
 fileprivate let BRANCH_SPREAD: CGFloat      = CGFloat.pi/2    // A disc slice of this angle
 fileprivate let LENGTH_RATIO: CGFloat       = 1.9
+fileprivate let MAX_DEPTH                   = 5
 
 // The fraction of the trunk where the first branch is
 fileprivate let TRUNK_BRANCH_LENGTH:CGFloat = 0.5
@@ -165,7 +168,7 @@ class Tree : SKNode, Branchable {
             branchPositionAsFraction = []
             numSubBranches = 0
             
-            if root.depth == 0 {
+            if root is Tree {
                 relativeDirection = 0
             } else {
                 relativeDirection = rand(from: -BRANCH_SPREAD/2, to: BRANCH_SPREAD/2)
@@ -216,7 +219,7 @@ class Tree : SKNode, Branchable {
                 grow()
             } else {
                 if leaf == nil && !(root is Tree) {
-                    let leafSide = decision() > 0 ? CGFloat.pi / 2 : -CGFloat.pi / 2
+                    let leafSide = decision() > 0.5 ? CGFloat.pi / 2 : -CGFloat.pi / 2
                     leaf = Leaf(offset: shape.getTopPoint(),
                                 direction: polarToCartesian(direction: direction + relativeDirection + leafSide))
                     self.addChild(leaf!)
@@ -256,8 +259,12 @@ class Tree : SKNode, Branchable {
                     branch[i].update(from: pos)
                 }
             
-            let branching = length > 20 && decision() < 2*length/MAX_LENGTH && branch.count < MAX_CHILD_BRANCHES
-            if branching && NUMBER_OF_BRANCHES < MAX_BRANCHES {
+            let branching = length > 20 && decision() < 2*length/MAX_LENGTH
+                            && branch.count < MAX_CHILD_BRANCHES
+                            //&& NUMBER_OF_BRANCHES < MAX_BRANCHES
+                            && depth + 1 < MAX_DEPTH
+                
+            if branching {
 
                 
                 sprout()
@@ -268,7 +275,9 @@ class Tree : SKNode, Branchable {
         
         private func calculateNewBranch() -> CGFloat {
             let fraction = (1 / pow(2, CGFloat(branchPositionAsFraction.count)))
-            if depth == 1 {
+            if root is Tree {
+                // The first branch will be at TRUNK_BRANCH_LENGTH * length from start of trunk
+                // the rest will be distributed evenly above
                 return 1 - (1-TRUNK_BRANCH_LENGTH) * fraction
             } else {
                 return fraction
