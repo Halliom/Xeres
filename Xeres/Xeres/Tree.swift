@@ -70,7 +70,6 @@ class Tree : SKNode, Branchable {
 
     private var trunk : TreeBranch?
     var direction = CGFloat.pi/2
-
     
     private var len: CGFloat
     
@@ -100,7 +99,8 @@ class Tree : SKNode, Branchable {
     
     // Start growing the tree
     func grow(from pos: CGPoint) {
-        trunk = TreeBranch(from: CGPoint(), withRoot: self)
+        self.position = pos
+        trunk = TreeBranch(from: pos, withRoot: self)
         self.addChild(trunk!)
     }
     
@@ -121,6 +121,12 @@ class Tree : SKNode, Branchable {
         private var branch : [TreeBranch]
         private var branchPositionAsFraction : [CGFloat]
         private var numSubBranches : Int
+        
+        private var hasSubBranches: Bool {
+            get {
+                return numSubBranches > 0
+            }
+        }
         
         var direction : CGFloat
         private var relativeDirection : CGFloat
@@ -172,12 +178,10 @@ class Tree : SKNode, Branchable {
             shape = Stem(dir: polarToCartesian(direction: direction))
             self.addChild(shape)
             self.position  = pos
-            
         }
         
         required init?(coder aDecoder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
-
         }
         
         // The TreeBranch grows in length
@@ -202,33 +206,60 @@ class Tree : SKNode, Branchable {
         }
         
         func update(from position: CGPoint) {
-            
             self.position = position
             
             let growing = length < MAX_LENGTH && root.length/self.length > LENGTH_RATIO && decision() > 0.15
             if growing {
                 grow()
             } else {
-                if leaf == nil {
-                    leaf = Leaf(offset: shape.getTopPoint(), direction: polarToCartesian(direction: direction))
+                if leaf == nil && !(root is Tree) {
+                    let leafSide = decision() > 0 ? CGFloat.pi / 2 : -CGFloat.pi / 2
+                    leaf = Leaf(offset: shape.getTopPoint(),
+                                direction: polarToCartesian(direction: direction + relativeDirection + leafSide))
                     self.addChild(leaf!)
                 }
             }
             
-            direction = root.direction + relativeDirection
-            shape.update(length: len, dir: polarToCartesian(direction: direction))
-
+            if let plantScene = self.scene as? PlantScene {
+                // Get the global position of this node and the direction to the sun
+                let globalPos = self.convert(self.position, to: plantScene)
+                let sunDirection = plantScene.sun.getDirectionToSun(from: globalPos)
+                
+                // Get the angle of the sun and how far the angle of this branch is from it
+                var sunAngle = atan(sunDirection.y / sunDirection.x)
+                if sunAngle < 0 {
+                    sunAngle += .pi
+                }
+                let dist = sunAngle - (root.direction + relativeDirection)
+                
+                // Amount is the amount we lean towards the sun and it is proportional
+                // to how far we are from the sun -> further away = more influence by the
+                // suns angle
+                var leanAmount = abs(dist) / (2 * CGFloat.pi)
+                
+                // Seriously nerf it if already has sprouted children.
+                // This feature could easily be removed if unwanted
+                if hasSubBranches {
+                    leanAmount *= 0.05
+                }
+                
+                // Set the new direction relative to the sun
+                direction = root.direction + relativeDirection + (leanAmount * dist)
+                
+                shape.update(length: len, dir: polarToCartesian(direction: direction))
             
-            for i in 0..<branch.count {
-                let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
-                branch[i].update(from: pos)
-            }
+                for i in 0..<branch.count {
+                    let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
+                    branch[i].update(from: pos)
+                }
             
             let branching = length > 20 && decision() < 2*length/MAX_LENGTH && branch.count < MAX_CHILD_BRANCHES
             if branching && NUMBER_OF_BRANCHES < MAX_BRANCHES {
+
                 
                 sprout()
                 NUMBER_OF_BRANCHES += 1
+                }
             }
         }
         
