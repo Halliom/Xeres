@@ -203,7 +203,7 @@ class Tree : SKNode, Branchable {
                 }
                 
                 // Set the new direction relative to the sun
-                direction = root.direction + relativeDirection + (amount * dist)
+                direction = root.direction + relativeDirection + (leanAmount * dist)
                 
                 shape.update(length: len, dir: polarToCartesian(direction: direction))
             
