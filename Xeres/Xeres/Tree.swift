@@ -57,8 +57,11 @@ fileprivate let MAX_LENGTH: CGFloat         = 300
 fileprivate let MAX_BRANCHES                = 100
 fileprivate let BASE_GROWTH_SPEED: CGFloat  = 1.01
 fileprivate let MAX_CHILD_BRANCHES          = 5
-fileprivate let BRANCH_SPREAD: CGFloat      = CGFloat.pi // A disc slice of this angle
+fileprivate let BRANCH_SPREAD: CGFloat      = CGFloat.pi/2    // A disc slice of this angle
 fileprivate let LENGTH_RATIO: CGFloat       = 1.9
+
+// The fraction of the trunk where the first branch is
+fileprivate let TRUNK_BRANCH_LENGTH:CGFloat = 0.5
 
 
 fileprivate var NUMBER_OF_BRANCHES  = 0      // An ugly global, please don't create multiple instances of Tree
@@ -186,7 +189,7 @@ class Tree : SKNode, Branchable {
         
         // The TreeBranch grows in length
         private func grow() {
-            if len > 2/3 * MAX_LENGTH && growthSpeed > 1 {
+            if len > 2/3 * MAX_LENGTH && growthSpeed * 0.999 > 1 {
                 growthSpeed *= 0.999                            // what is good number for this??? -= 0.00001 ???
             }
             len *= growthSpeed
@@ -264,7 +267,12 @@ class Tree : SKNode, Branchable {
         }
         
         private func calculateNewBranch() -> CGFloat {
-            return 1 - (1 / pow(2, CGFloat(branchPositionAsFraction.count+1)))
+            let fraction = (1 / pow(2, CGFloat(branchPositionAsFraction.count)))
+            if depth == 1 {
+                return 1 - (1-TRUNK_BRANCH_LENGTH) * fraction
+            } else {
+                return fraction
+            }
         }
         
         private func numberOfSubBranches() -> Int {
