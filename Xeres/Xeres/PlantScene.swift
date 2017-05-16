@@ -50,7 +50,7 @@ class PlantScene: SKScene {
     
     func motionUpdate(gyroData: CMGyroData?, error: Error?) {
         if let rotationRate = gyroData?.rotationRate {
-            accumulatedRotation += rotationRate.x
+            accumulatedRotation += rotationRate.z
         }
     }
     
