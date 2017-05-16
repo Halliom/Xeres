@@ -173,7 +173,7 @@ class Tree : SKNode, Branchable {
             if growing {
                 grow()
             } else {
-                if leaf == nil {
+                if leaf == nil && !(root is Tree) {
                     let leafSide = decision() > 0 ? CGFloat.pi / 2 : -CGFloat.pi / 2
                     leaf = Leaf(offset: shape.getTopPoint(),
                                 direction: polarToCartesian(direction: direction + relativeDirection + leafSide))
