@@ -78,6 +78,7 @@ class Tree : SKNode, Branchable {
     
     // Start growing the tree
     func grow(from pos: CGPoint) {
+        self.position = pos
         trunk = TreeBranch(from: pos, withRoot: self)
         self.addChild(trunk!)
     }
