@@ -177,20 +177,31 @@ class Tree : SKNode, Branchable {
                 }
             }
             
-            direction = root.direction + relativeDirection
-            shape.update(length: len, dir: polarToCartesian(direction: direction))
+            if let plantScene = self.scene as? PlantScene {
+                // Get the global position of this node and the direction to the sun
+                let globalPos = self.convert(self.position, to: plantScene)
+                let sunDirection = plantScene.sun.getDirectionToSun(from: globalPos)
+                
+                // Get the angle of the sun and how far the angle of this branch is from it
+                let sunAngle = atan(sunDirection.y / sunDirection.x)
+                let dist = sunAngle - (root.direction + relativeDirection)
+                let part = dist / (2 * CGFloat.pi)
+                
+                direction = root.direction + relativeDirection + (part * dist)
+                shape.update(length: len, dir: polarToCartesian(direction: direction))
 
             
-            for i in 0..<branch.count {
-                let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
-                branch[i].update(from: pos)
-            }
+                for i in 0..<branch.count {
+                    let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
+                    branch[i].update(from: pos)
+                }
             
-            let branching = length > 10 && decision() < 2*length/MAX_LENGTH && branch.count < 5
-            if branching && NUMBER_OF_BRANCHES < MAX_BRANCHES {
+                let branching = length > 10 && decision() < 2*length/MAX_LENGTH && branch.count < 5
+                if branching && NUMBER_OF_BRANCHES < MAX_BRANCHES {
                 
                 sprout()
                 NUMBER_OF_BRANCHES += 1
+                }
             }
         }
         
