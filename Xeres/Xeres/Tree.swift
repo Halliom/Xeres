@@ -55,7 +55,6 @@ class Tree : SKNode, Branchable {
 
     private var trunk : TreeBranch?
     var direction = CGFloat.pi/2
-
     
     private var len : CGFloat
     
@@ -101,6 +100,12 @@ class Tree : SKNode, Branchable {
         private var branchPositionAsFraction : [CGFloat]
         private var numSubBranches : Int
         
+        private var hasSubBranches: Bool {
+            get {
+                return numSubBranches > 0
+            }
+        }
+        
         var direction : CGFloat
         private var relativeDirection : CGFloat
         
@@ -133,12 +138,10 @@ class Tree : SKNode, Branchable {
             shape = Stem(dir: polarToCartesian(direction: direction))
             self.addChild(shape)
             self.position  = pos
-            
         }
         
         required init?(coder aDecoder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
-
         }
         
         // The TreeBranch grows in length
@@ -164,7 +167,6 @@ class Tree : SKNode, Branchable {
         }
         
         func update(from position: CGPoint) {
-            
             self.position = position
             
             let growing = length < MAX_LENGTH && root.length/self.length > 1.5 && decision() > 0.15
@@ -188,9 +190,20 @@ class Tree : SKNode, Branchable {
                     sunAngle += .pi
                 }
                 let dist = sunAngle - (root.direction + relativeDirection)
-                let part = abs(dist) / (2 * CGFloat.pi)
                 
-                direction = root.direction + relativeDirection + (dist * part)
+                // Amount is the amount we lean towards the sun and it is proportional
+                // to how far we are from the sun -> further away = more influence by the
+                // suns angle
+                var amount = abs(dist) / (2 * CGFloat.pi)
+                
+                // Seriously nerf it if already has sprouted children.
+                // This feature could easily be removed if unwanted
+                if hasSubBranches {
+                    amount *= 0.05
+                }
+                
+                // Set the new direction relative to the sun
+                direction = root.direction + relativeDirection + (amount * dist)
                 
                 shape.update(length: len, dir: polarToCartesian(direction: direction))
             
