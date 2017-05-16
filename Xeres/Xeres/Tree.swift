@@ -53,11 +53,12 @@ protocol Branchable {
 
 // Constants describing the look of the tree
 
-fileprivate let MAX_LENGTH: CGFloat         = 200
+fileprivate let MAX_LENGTH: CGFloat         = 300
 fileprivate let MAX_BRANCHES                = 100
 fileprivate let BASE_GROWTH_SPEED: CGFloat  = 1.01
 fileprivate let MAX_CHILD_BRANCHES          = 5
 fileprivate let BRANCH_SPREAD: CGFloat      = CGFloat.pi // A disc slice of this angle
+fileprivate let LENGTH_RATIO: CGFloat       = 1.9
 
 
 fileprivate var NUMBER_OF_BRANCHES  = 0      // An ugly global, please don't create multiple instances of Tree
@@ -204,7 +205,7 @@ class Tree : SKNode, Branchable {
             
             self.position = position
             
-            let growing = length < MAX_LENGTH && root.length/self.length > 1.5 && decision() > 0.15
+            let growing = length < MAX_LENGTH && root.length/self.length > LENGTH_RATIO && decision() > 0.15
             if growing {
                 grow()
             } else {
@@ -223,7 +224,7 @@ class Tree : SKNode, Branchable {
                 branch[i].update(from: pos)
             }
             
-            let branching = length > 10 && decision() < 2*length/MAX_LENGTH && branch.count < MAX_CHILD_BRANCHES
+            let branching = length > 20 && decision() < 2*length/MAX_LENGTH && branch.count < MAX_CHILD_BRANCHES
             if branching && NUMBER_OF_BRANCHES < MAX_BRANCHES {
                 
                 sprout()
