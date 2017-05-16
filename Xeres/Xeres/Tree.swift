@@ -194,12 +194,12 @@ class Tree : SKNode, Branchable {
                 // Amount is the amount we lean towards the sun and it is proportional
                 // to how far we are from the sun -> further away = more influence by the
                 // suns angle
-                var amount = abs(dist) / (2 * CGFloat.pi)
+                var leanAmount = abs(dist) / (2 * CGFloat.pi)
                 
                 // Seriously nerf it if already has sprouted children.
                 // This feature could easily be removed if unwanted
                 if hasSubBranches {
-                    amount *= 0.05
+                    leanAmount *= 0.05
                 }
                 
                 // Set the new direction relative to the sun
