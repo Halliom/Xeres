@@ -10,7 +10,7 @@ import SpriteKit
 
 class PlantScene: SKScene {
     
-    var tree: Tree!
+    var tree: Tree?
     
     var sun: Sun!
     
@@ -22,9 +22,6 @@ class PlantScene: SKScene {
         
         self.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         self.backgroundColor = UIColor.white
-        
-        self.tree = Tree()
-        self.addChild(tree)
     }
     
     override func didMove(to view: SKView) {
@@ -34,11 +31,21 @@ class PlantScene: SKScene {
                        maxWidth: self.frame.maxX)
         addChild(sun)
         
-        // Begin growing the tree
-        tree.grow(from: CGPoint(x: 0, y: -frame.maxY / 2))
-        
         // Start receiving gyro updates
         motionManager.startGyroUpdates(to: OperationQueue.current!, withHandler: motionUpdate)
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = touches.first as! UITouch
+        
+        let touchLocation = touch.location(in: self)
+        
+        if tree == nil {
+            // Begin growing the tree
+            self.tree = Tree()
+            self.addChild(tree!)
+            self.tree!.grow(from: CGPoint(x: 0, y: -self.frame.maxY + 175))
+        }
     }
     
     func motionUpdate(gyroData: CMGyroData?, error: Error?) {
@@ -52,7 +59,7 @@ class PlantScene: SKScene {
     }
     
     override func update(_ currentTime: TimeInterval) {
-        tree.update()
+        tree?.update()
         
         sun.move(amount: CGFloat(accumulatedRotation) * 0.01)
         accumulatedRotation = 0
