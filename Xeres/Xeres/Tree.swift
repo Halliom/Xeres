@@ -183,13 +183,16 @@ class Tree : SKNode, Branchable {
                 let sunDirection = plantScene.sun.getDirectionToSun(from: globalPos)
                 
                 // Get the angle of the sun and how far the angle of this branch is from it
-                let sunAngle = atan(sunDirection.y / sunDirection.x)
+                var sunAngle = atan(sunDirection.y / sunDirection.x)
+                if sunAngle < 0 {
+                    sunAngle += .pi
+                }
                 let dist = sunAngle - (root.direction + relativeDirection)
-                let part = dist / (2 * CGFloat.pi)
+                let part = abs(dist) / (2 * CGFloat.pi)
                 
-                direction = root.direction + relativeDirection + (part * dist)
+                direction = root.direction + relativeDirection + (dist * part)
+                
                 shape.update(length: len, dir: polarToCartesian(direction: direction))
-
             
                 for i in 0..<branch.count {
                     let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
