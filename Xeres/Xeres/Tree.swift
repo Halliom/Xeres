@@ -60,8 +60,8 @@ fileprivate let MAX_BRANCHES                = 100
 fileprivate let BASE_GROWTH_SPEED: CGFloat  = 1.005
 fileprivate let MAX_CHILD_BRANCHES          = 5
 fileprivate let BRANCH_SPREAD: CGFloat      = CGFloat.pi/2    // A disc slice of this angle
-fileprivate let LENGTH_RATIO: CGFloat       = 1.2
-fileprivate let MAX_DEPTH                   = 3
+fileprivate let LENGTH_RATIO: CGFloat       = 1.4
+fileprivate let MAX_DEPTH                   = 5
 
 // The fraction of the trunk where the first branch is
 fileprivate let TRUNK_BRANCH_LENGTH:CGFloat = 0.5
@@ -114,7 +114,7 @@ class Tree : SKNode, Branchable {
     func update() {
         if let t = trunk {
             t.update(from: position)
-            //t.updatePhysics()
+            t.updatePhysics()
             //t.updateSunInfluence()
         } else {
             print("Call grow before draw")
@@ -218,12 +218,12 @@ class Tree : SKNode, Branchable {
             if growing {
                 grow()
             } else {
-//                if leaf == nil && !(root is Tree) {
-//                    let leafSide = decision() > 0.5 ? CGFloat.pi / 2 : -CGFloat.pi / 2
-//                    leaf = Leaf(offset: shape.getTopPoint(),
-//                                direction: polarToCartesian(direction: direction + relativeDirection + leafSide))
-//                    self.addChild(leaf!)
-//                }
+                if leaf == nil && !(root is Tree) {
+                    let leafSide = decision() > 0.5 ? CGFloat.pi / 2 : -CGFloat.pi / 2
+                    leaf = Leaf(offset: shape.getTopPoint(),
+                                direction: polarToCartesian(direction: direction + relativeDirection + leafSide))
+                    self.addChild(leaf!)
+                }
             }
             
             // Set the new direction
@@ -257,7 +257,7 @@ class Tree : SKNode, Branchable {
                 // the rest will be distributed evenly above
                 return 1 - (1-TRUNK_BRANCH_LENGTH) * fraction
             } else {
-                return fraction
+                return 1 - fraction
             }
         }
         
