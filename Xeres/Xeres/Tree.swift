@@ -57,11 +57,11 @@ protocol Branchable {
 
 fileprivate let MAX_LENGTH: CGFloat         = 300
 fileprivate let MAX_BRANCHES                = 100
-fileprivate let BASE_GROWTH_SPEED: CGFloat  = 1.005
-fileprivate let MAX_CHILD_BRANCHES          = 5
+fileprivate let BASE_GROWTH_SPEED: CGFloat  = 0.1
+fileprivate let MAX_CHILD_BRANCHES          = 7
 fileprivate let BRANCH_SPREAD: CGFloat      = CGFloat.pi/2    // A disc slice of this angle
-fileprivate let LENGTH_RATIO: CGFloat       = 1.4
-fileprivate let MAX_DEPTH                   = 5
+fileprivate let LENGTH_RATIO: CGFloat       = 1.9
+fileprivate let MAX_DEPTH                   = 4
 
 // The fraction of the trunk where the first branch is
 fileprivate let TRUNK_BRANCH_LENGTH:CGFloat = 0.5
@@ -115,7 +115,7 @@ class Tree : SKNode, Branchable {
         if let t = trunk {
             t.update(from: position)
             t.updatePhysics()
-            //t.updateSunInfluence()
+            t.updateSunInfluence()
         } else {
             print("Call grow before draw")
         }
@@ -192,10 +192,12 @@ class Tree : SKNode, Branchable {
         
         // The TreeBranch grows in length
         private func grow() {
-            if len > 2/3 * MAX_LENGTH && growthSpeed * 0.999 > 1 {
-                growthSpeed *= 0.999                            // what is good number for this??? -= 0.00001 ???
+            if depth == MAX_DEPTH {
+                growthSpeed = 0
+            } else if len > 2/3 * MAX_LENGTH && growthSpeed * 0.999 > 1 {
+                growthSpeed *= 0.9                         // what is good number for this??? -= 0.00001 ???
             }
-            len *= growthSpeed
+            len += growthSpeed
         }
         
         // A new TreeBranch sprouts from this one
@@ -225,9 +227,16 @@ class Tree : SKNode, Branchable {
                     self.addChild(leaf!)
                 }
             }
+
             
             // Set the new direction
             direction = root.direction + relativeDirection
+            
+            if direction > 3 * .pi/2 || direction < 0{
+                direction = 0
+            } else if direction > .pi {
+                direction = .pi
+            }
             
             shape.update(length: len, dir: polarToCartesian(direction: direction))
             
@@ -236,10 +245,10 @@ class Tree : SKNode, Branchable {
                 branch[i].update(from: pos)
             }
             
-            let branching = length > 20 && decision() < 2*length/MAX_LENGTH
+            let branching = length > 70 && decision() < 2*length/MAX_LENGTH
                 && branch.count < MAX_CHILD_BRANCHES
                 //&& NUMBER_OF_BRANCHES < MAX_BRANCHES
-                && depth + 1 < MAX_DEPTH
+                && depth < MAX_DEPTH
             
             if branching {
                 
