@@ -60,8 +60,8 @@ fileprivate let MAX_BRANCHES                = 100
 fileprivate let BASE_GROWTH_SPEED: CGFloat  = 1.005
 fileprivate let MAX_CHILD_BRANCHES          = 5
 fileprivate let BRANCH_SPREAD: CGFloat      = CGFloat.pi/2    // A disc slice of this angle
-fileprivate let LENGTH_RATIO: CGFloat       = 1.9
-fileprivate let MAX_DEPTH                   = 5
+fileprivate let LENGTH_RATIO: CGFloat       = 1.2
+fileprivate let MAX_DEPTH                   = 3
 
 // The fraction of the trunk where the first branch is
 fileprivate let TRUNK_BRANCH_LENGTH:CGFloat = 0.5
@@ -114,8 +114,8 @@ class Tree : SKNode, Branchable {
     func update() {
         if let t = trunk {
             t.update(from: position)
-            t.updatePhysics()
-          
+            //t.updatePhysics()
+            //t.updateSunInfluence()
         } else {
             print("Call grow before draw")
         }
@@ -126,7 +126,7 @@ class Tree : SKNode, Branchable {
         private let root : Branchable
         private var branch : [TreeBranch]
         private var branchPositionAsFraction : [CGFloat]
-        private var numSubBranches : Int
+        private var numSubBranches : Int                    // ISSUE: depends on updatePhysics to have a valid value
         
         private var hasSubBranches: Bool {
             get {
@@ -218,12 +218,52 @@ class Tree : SKNode, Branchable {
             if growing {
                 grow()
             } else {
-                if leaf == nil && !(root is Tree) {
-                    let leafSide = decision() > 0.5 ? CGFloat.pi / 2 : -CGFloat.pi / 2
-                    leaf = Leaf(offset: shape.getTopPoint(),
-                                direction: polarToCartesian(direction: direction + relativeDirection + leafSide))
-                    self.addChild(leaf!)
-                }
+//                if leaf == nil && !(root is Tree) {
+//                    let leafSide = decision() > 0.5 ? CGFloat.pi / 2 : -CGFloat.pi / 2
+//                    leaf = Leaf(offset: shape.getTopPoint(),
+//                                direction: polarToCartesian(direction: direction + relativeDirection + leafSide))
+//                    self.addChild(leaf!)
+//                }
+            }
+            
+            // Set the new direction
+            direction = root.direction + relativeDirection
+            
+            shape.update(length: len, dir: polarToCartesian(direction: direction))
+            
+            for i in 0..<branch.count {
+                let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
+                branch[i].update(from: pos)
+            }
+            
+            let branching = length > 20 && decision() < 2*length/MAX_LENGTH
+                && branch.count < MAX_CHILD_BRANCHES
+                //&& NUMBER_OF_BRANCHES < MAX_BRANCHES
+                && depth + 1 < MAX_DEPTH
+            
+            if branching {
+                
+                
+                sprout()
+                NUMBER_OF_BRANCHES += 1
+            }
+            
+        }
+        
+        private func calculateNewBranch() -> CGFloat {
+            let fraction = (1 / pow(2, CGFloat(branchPositionAsFraction.count)))
+            if root is Tree {
+                // The first branch will be at TRUNK_BRANCH_LENGTH * length from start of trunk
+                // the rest will be distributed evenly above
+                return 1 - (1-TRUNK_BRANCH_LENGTH) * fraction
+            } else {
+                return fraction
+            }
+        }
+        
+        func updateSunInfluence() {
+            if length >= MAX_LENGTH {
+                return
             }
             
             if let plantScene = self.scene as? PlantScene {
@@ -241,46 +281,22 @@ class Tree : SKNode, Branchable {
                 // Amount is the amount we lean towards the sun and it is proportional
                 // to how far we are from the sun -> further away = more influence by the
                 // suns angle
-                var leanAmount = abs(dist) / (2 * CGFloat.pi)
+                var leanAmount = abs(dist) / (2 * CGFloat.pi) * 1/1000
                 
                 // Seriously nerf it if already has sprouted children.
                 // This feature could easily be removed if unwanted
                 if hasSubBranches {
-                    leanAmount *= 0.05
+                    //leanAmount *= 0.0001
+                    leanAmount *= 1/(length * CGFloat(numSubBranches))
+                } else {
+                    leanAmount *= 1/length
                 }
                 
-                // Set the new direction relative to the sun
-                direction = root.direction + relativeDirection + (leanAmount * dist)
-                
-                shape.update(length: len, dir: polarToCartesian(direction: direction))
-            
-                for i in 0..<branch.count {
-                    let pos = shape.getPointOnStem(fraction: branchPositionAsFraction[i])
-                    branch[i].update(from: pos)
-                }
-            
-            let branching = length > 20 && decision() < 2*length/MAX_LENGTH
-                            && branch.count < MAX_CHILD_BRANCHES
-                            //&& NUMBER_OF_BRANCHES < MAX_BRANCHES
-                            && depth + 1 < MAX_DEPTH
-                
-            if branching {
-
-                
-                sprout()
-                NUMBER_OF_BRANCHES += 1
-                }
+                relativeDirection += leanAmount * dist
             }
-        }
-        
-        private func calculateNewBranch() -> CGFloat {
-            let fraction = (1 / pow(2, CGFloat(branchPositionAsFraction.count)))
-            if root is Tree {
-                // The first branch will be at TRUNK_BRANCH_LENGTH * length from start of trunk
-                // the rest will be distributed evenly above
-                return 1 - (1-TRUNK_BRANCH_LENGTH) * fraction
-            } else {
-                return fraction
+            
+            for b in branch {
+                b.updateSunInfluence()
             }
         }
         
@@ -291,6 +307,7 @@ class Tree : SKNode, Branchable {
             }
             return sum
         }
+        
   
         
         func updatePhysics() {
