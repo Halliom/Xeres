@@ -32,8 +32,7 @@ class PlantScene: SKScene {
                        maxWidth: self.frame.maxX)
         addChild(sun)
         
-        // Start receiving gyro updates
-        motionManager.startGyroUpdates(to: OperationQueue.current!, withHandler: motionUpdate)
+        motionManager.startAccelerometerUpdates()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -49,12 +48,6 @@ class PlantScene: SKScene {
         }
     }
     
-    func motionUpdate(gyroData: CMGyroData?, error: Error?) {
-        if let rotationRate = gyroData?.rotationRate {
-            accumulatedRotation += rotationRate.z
-        }
-    }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -63,6 +56,9 @@ class PlantScene: SKScene {
         
         tree?.update()
         
+        if let data = motionManager.accelerometerData {
+            accumulatedRotation = data.acceleration.x
+        }
         sun.move(amount: CGFloat(accumulatedRotation) * 0.01)
         accumulatedRotation = 0
     }

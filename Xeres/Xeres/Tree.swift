@@ -252,8 +252,6 @@ class Tree : SKNode, Branchable {
                 && depth < MAX_DEPTH
             
             if branching {
-                
-                
                 sprout()
                 NUMBER_OF_BRANCHES += 1
             }
