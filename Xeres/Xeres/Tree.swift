@@ -56,7 +56,7 @@ protocol Branchable {
 // Constants describing the look of the tree
 
 fileprivate let MAX_LENGTH: CGFloat         = 300
-fileprivate let MAX_BRANCHES                = 28
+fileprivate let MAX_BRANCHES                = 100
 fileprivate let BASE_GROWTH_SPEED: CGFloat  = 0.1
 fileprivate let MAX_CHILD_BRANCHES          = 7
 fileprivate let BRANCH_SPREAD: CGFloat      = CGFloat.pi/2    // A disc slice of this angle
@@ -248,7 +248,7 @@ class Tree : SKNode, Branchable {
             
             let branching = length > 70 && decision() < 2*length/MAX_LENGTH
                 && branch.count < MAX_CHILD_BRANCHES
-                && NUMBER_OF_BRANCHES < MAX_BRANCHES
+                //&& NUMBER_OF_BRANCHES < MAX_BRANCHES
                 && depth < MAX_DEPTH
             
             if branching {

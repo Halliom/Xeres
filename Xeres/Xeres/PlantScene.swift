@@ -25,6 +25,7 @@ class PlantScene: SKScene {
     }
     
     override func didMove(to view: SKView) {
+        
         self.sun = Sun(position: CGPoint(x: 0, y: 0),
                        topOfScreen: self.frame.maxY - 175,
                        minWidth: -self.frame.maxX,
@@ -59,6 +60,7 @@ class PlantScene: SKScene {
     }
     
     override func update(_ currentTime: TimeInterval) {
+        
         tree?.update()
         
         sun.move(amount: CGFloat(accumulatedRotation) * 0.01)
