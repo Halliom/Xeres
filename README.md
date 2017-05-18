@@ -3,6 +3,9 @@
 
 Follow the growth of your own personal plant, using gravity and care to shape its future.
 
+![Start of growth](grow_1.gif)
+![End of growth](grow_2.gif)
+
 #### Remember
 - CG... for things related to drawing
 - Renderpipeline: Stem -> Leaf
