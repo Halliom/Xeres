@@ -6,6 +6,11 @@ Follow the growth of your own personal plant, using gravity and care to shape it
 ![Start of growth](grow_1.gif)
 ![End of growth](grow_2.gif)
 
+The plant also reaches for the sun, which you can affect by tilting your phone!
+
+![Sun](sun_1.gif)
+![Sun](sun_2.gif)
+
 #### Remember
 - CG... for things related to drawing
 - Renderpipeline: Stem -> Leaf
