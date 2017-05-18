@@ -41,16 +41,12 @@ class Leaf: SKNode {
         let mid   = CGPoint(x: SIZE, y: SIZE)
         let ctrl1 = CGPoint(x: (3 / 5) * SIZE, y: SIZE)
         
-        let end   = CGPoint(x: 0, y: 0)
-        let ctrl2 = CGPoint(x: (2 / 5) * SIZE, y: (2/5) * SIZE)
-        
         // Sets angle=0 to mean "to the right"
         let rotationAngle = angle - CGFloat.pi / 4
         
 
         shape.move(to: start)
         shape.addQuadCurve(to: mid, controlPoint: ctrl1)
-        //shape.addQuadCurve(to: end, controlPoint: ctrl2)
         shape.close()
         
         // Put the leaf into position

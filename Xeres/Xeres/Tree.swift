@@ -56,7 +56,7 @@ protocol Branchable {
 // Constants describing the look of the tree
 
 fileprivate let MAX_LENGTH: CGFloat         = 300
-fileprivate let MAX_BRANCHES                = 100
+fileprivate let MAX_BRANCHES                = 28
 fileprivate let BASE_GROWTH_SPEED: CGFloat  = 0.1
 fileprivate let MAX_CHILD_BRANCHES          = 7
 fileprivate let BRANCH_SPREAD: CGFloat      = CGFloat.pi/2    // A disc slice of this angle
@@ -110,7 +110,7 @@ class Tree : SKNode, Branchable {
         self.addChild(trunk!)
     }
     
-    // Update the structure of the tree
+    // Update and draw tree
     func update() {
         if let t = trunk {
             t.update(from: position)
@@ -195,7 +195,7 @@ class Tree : SKNode, Branchable {
             if depth == MAX_DEPTH {
                 growthSpeed = 0
             } else if len > 2/3 * MAX_LENGTH && growthSpeed * 0.999 > 1 {
-                growthSpeed *= 0.9                         // what is good number for this??? -= 0.00001 ???
+                growthSpeed *= 0.99                      
             }
             len += growthSpeed
         }
@@ -213,6 +213,7 @@ class Tree : SKNode, Branchable {
             branch.append(newBranch)
         }
         
+        // Updates the position of a branch as well as drawing it in place
         func update(from position: CGPoint) {
             self.position = position
             
@@ -232,7 +233,7 @@ class Tree : SKNode, Branchable {
             // Set the new direction
             direction = root.direction + relativeDirection
             
-            if direction > 3 * .pi/2 || direction < 0{
+            if direction > 3 * .pi/2 || direction < 0 {
                 direction = 0
             } else if direction > .pi {
                 direction = .pi
@@ -247,7 +248,7 @@ class Tree : SKNode, Branchable {
             
             let branching = length > 70 && decision() < 2*length/MAX_LENGTH
                 && branch.count < MAX_CHILD_BRANCHES
-                //&& NUMBER_OF_BRANCHES < MAX_BRANCHES
+                && NUMBER_OF_BRANCHES < MAX_BRANCHES
                 && depth < MAX_DEPTH
             
             if branching {
@@ -271,9 +272,6 @@ class Tree : SKNode, Branchable {
         }
         
         func updateSunInfluence() {
-            if length >= MAX_LENGTH {
-                return
-            }
             
             if let plantScene = self.scene as? PlantScene {
                 // Get the global position of this node and the direction to the sun
@@ -290,22 +288,15 @@ class Tree : SKNode, Branchable {
                 // Amount is the amount we lean towards the sun and it is proportional
                 // to how far we are from the sun -> further away = more influence by the
                 // suns angle
-                var leanAmount = abs(dist) / (2 * CGFloat.pi) * 1/1000
+                var leanAmount = abs(dist) / (2 * CGFloat.pi)
                 
                 // Seriously nerf it if already has sprouted children.
                 // This feature could easily be removed if unwanted
                 if hasSubBranches {
-                    //leanAmount *= 0.0001
-                    leanAmount *= 1/(length * CGFloat(numSubBranches))
-                } else {
-                    leanAmount *= 1/length
+                    leanAmount *= 1
                 }
                 
                 relativeDirection += leanAmount * dist
-            }
-            
-            for b in branch {
-                b.updateSunInfluence()
             }
         }
         
